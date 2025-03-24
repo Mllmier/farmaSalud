@@ -15,7 +15,10 @@ public class login extends javax.swing.JFrame {
      */
     public login() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -103,18 +106,18 @@ public class login extends javax.swing.JFrame {
         jPanel7.add(txtcontra, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 380, 370, 30));
 
         jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Seleccionar cargo>", "Administrador", "Doctor", "Secretaria" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Seleccionar cargo>", "Administrador", "Doctor", "Recepcionista", "Farmaceutica", "´" }));
         jComboBox1.setBorder(null);
         jPanel7.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 182, 370, 40));
         jPanel7.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 30, 60, 50));
 
-        jPanel3.setBackground(new java.awt.Color(51, 0, 255));
+        jPanel3.setBackground(new java.awt.Color(10, 92, 184));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 367, Short.MAX_VALUE)
+            .addGap(0, 375, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,7 +129,7 @@ public class login extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

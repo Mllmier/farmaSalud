@@ -24,7 +24,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="jPanel7" min="-2" pref="490" max="-2" attributes="0"/>
+              <Component id="jPanel7" min="-2" pref="501" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
@@ -215,11 +215,13 @@
               <Font name="Segoe UI" size="18" style="0"/>
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
+              <StringArray count="6">
                 <StringItem index="0" value="&lt;Seleccionar cargo&gt;"/>
                 <StringItem index="1" value="Administrador"/>
                 <StringItem index="2" value="Doctor"/>
-                <StringItem index="3" value="Secretaria"/>
+                <StringItem index="3" value="Recepcionista"/>
+                <StringItem index="4" value="Farmaceutica"/>
+                <StringItem index="5" value="&#xb4;"/>
               </StringArray>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -247,14 +249,14 @@
     <Container class="javax.swing.JPanel" name="jPanel3">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="0" red="33" type="rgb"/>
+          <Color blue="b8" green="5c" red="a" type="rgb"/>
         </Property>
       </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="367" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="375" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
