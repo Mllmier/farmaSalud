@@ -154,6 +154,7 @@ public class Doctor extends javax.swing.JFrame {
         jLabel3.setText("Doctor");
 
         lblIconRecepcion.setBackground(new java.awt.Color(255, 255, 255));
+        lblIconRecepcion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/doctor (1).png"))); // NOI18N
         lblIconRecepcion.setText("      ");
         lblIconRecepcion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
 
@@ -189,6 +190,7 @@ public class Doctor extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/diagnostico (1).png"))); // NOI18N
         Diagnostico.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 52, 50));
 
         Atencion.setBackground(new java.awt.Color(10, 92, 184));
@@ -199,13 +201,17 @@ public class Doctor extends javax.swing.JFrame {
         jLabel5.setText("Atencion");
         Atencion.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 20, -1, -1));
         Atencion.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, -1, -1));
-        Atencion.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 6, 50, 50));
+
+        jLabel43.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/examen (1).png"))); // NOI18N
+        Atencion.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 6, 60, 50));
 
         Agenda.setBackground(new java.awt.Color(10, 92, 184));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Agenda Medica");
+
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/agenda.png"))); // NOI18N
 
         javax.swing.GroupLayout AgendaLayout = new javax.swing.GroupLayout(Agenda);
         Agenda.setLayout(AgendaLayout);
@@ -258,8 +264,8 @@ public class Doctor extends javax.swing.JFrame {
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblIconRecepcion, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblIconRecepcion, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(58, 58, 58)
                 .addComponent(Diagnostico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -277,7 +283,9 @@ public class Doctor extends javax.swing.JFrame {
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setText("\"Tu bienestar, nuestra prioridad.\"  ");
+        jLabel12.setText("\"Tu bienestar, nuestra prioridad\"  ");
+
+        jLabel45.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/visita-al-doctor.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -339,6 +347,8 @@ public class Doctor extends javax.swing.JFrame {
         jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
 
         jLabel37.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+
+        jLabel44.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/medicamento.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -420,6 +430,8 @@ public class Doctor extends javax.swing.JFrame {
 
         jLabel38.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/receta (1).png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
@@ -492,6 +504,8 @@ public class Doctor extends javax.swing.JFrame {
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Finalizar");
 
+        jLabel31.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/chequeo-medico (1).png"))); // NOI18N
+
         javax.swing.GroupLayout PanelDiagnosticoLayout = new javax.swing.GroupLayout(PanelDiagnostico);
         PanelDiagnostico.setLayout(PanelDiagnosticoLayout);
         PanelDiagnosticoLayout.setHorizontalGroup(
@@ -509,7 +523,7 @@ public class Doctor extends javax.swing.JFrame {
                         .addComponent(jButton3)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelDiagnosticoLayout.createSequentialGroup()
-                        .addGap(87, 87, 87)
+                        .addGap(100, 100, 100)
                         .addGroup(PanelDiagnosticoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 442, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(PanelDiagnosticoLayout.createSequentialGroup()
@@ -717,7 +731,7 @@ public class Doctor extends javax.swing.JFrame {
                         .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 591, Short.MAX_VALUE))
+                .addGap(0, 604, Short.MAX_VALUE))
         );
         PanelAtencionLayout.setVerticalGroup(
             PanelAtencionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -831,7 +845,7 @@ public class Doctor extends javax.swing.JFrame {
                         .addComponent(jLabel42)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(719, Short.MAX_VALUE))
+                .addContainerGap(732, Short.MAX_VALUE))
         );
         PanelAgendaLayout.setVerticalGroup(
             PanelAgendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
