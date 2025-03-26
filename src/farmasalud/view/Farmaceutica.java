@@ -4,6 +4,8 @@
  */
 package farmasalud.view;
 
+import java.awt.Color;
+
 /**
  *
  * @author HP
@@ -124,6 +126,17 @@ public class Farmaceutica extends javax.swing.JFrame {
         lblIconRecepcion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
 
         PanelInicio.setBackground(new java.awt.Color(10, 92, 184));
+        PanelInicio.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                PanelInicioMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                PanelInicioMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                PanelInicioMouseExited(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -162,6 +175,17 @@ public class Farmaceutica extends javax.swing.JFrame {
         );
 
         PanelEntrega.setBackground(new java.awt.Color(10, 92, 184));
+        PanelEntrega.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                PanelEntregaMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                PanelEntregaMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                PanelEntregaMouseExited(evt);
+            }
+        });
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/repartidor (1) (1).png"))); // NOI18N
 
@@ -190,6 +214,17 @@ public class Farmaceutica extends javax.swing.JFrame {
         );
 
         PanelInventario.setBackground(new java.awt.Color(10, 92, 184));
+        PanelInventario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                PanelInventarioMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                PanelInventarioMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                PanelInventarioMouseExited(evt);
+            }
+        });
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/inventario (1).png"))); // NOI18N
 
@@ -571,6 +606,59 @@ public class Farmaceutica extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void PanelInicioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelInicioMouseClicked
+        // TODO add your handling code here:
+         jTabbedPane1.setSelectedIndex(0);
+    }//GEN-LAST:event_PanelInicioMouseClicked
+
+    private void PanelInicioMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelInicioMouseEntered
+        // TODO add your handling code here:
+    PanelInicio.setBackground(new Color(0, 102, 204)); 
+
+    }//GEN-LAST:event_PanelInicioMouseEntered
+
+    private void PanelInicioMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelInicioMouseExited
+        // TODO add your handling code here:
+    PanelInicio.setBackground(new Color(10, 92, 184)); 
+
+    }//GEN-LAST:event_PanelInicioMouseExited
+
+    private void PanelEntregaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelEntregaMouseClicked
+        // TODO add your handling code here:
+    jTabbedPane1.setSelectedIndex(1);
+
+    }//GEN-LAST:event_PanelEntregaMouseClicked
+
+    private void PanelEntregaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelEntregaMouseEntered
+        // TODO add your handling code here:
+    PanelEntrega.setBackground(new Color(0, 102, 204)); 
+
+    }//GEN-LAST:event_PanelEntregaMouseEntered
+
+    private void PanelEntregaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelEntregaMouseExited
+        // TODO add your handling code here:
+    PanelEntrega.setBackground(new Color(10, 92, 184)); 
+
+    }//GEN-LAST:event_PanelEntregaMouseExited
+
+    private void PanelInventarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelInventarioMouseClicked
+        // TODO add your handling code here:
+    jTabbedPane1.setSelectedIndex(2);
+
+    }//GEN-LAST:event_PanelInventarioMouseClicked
+
+    private void PanelInventarioMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelInventarioMouseEntered
+        // TODO add your handling code here:
+    PanelInventario.setBackground(new Color(0, 102, 204)); 
+
+    }//GEN-LAST:event_PanelInventarioMouseEntered
+
+    private void PanelInventarioMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelInventarioMouseExited
+        // TODO add your handling code here:
+    PanelInventario.setBackground(new Color(10, 92, 184)); 
+
+    }//GEN-LAST:event_PanelInventarioMouseExited
 
     /**
      * @param args the command line arguments
