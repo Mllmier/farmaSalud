@@ -17,39 +17,7 @@ public class Doctor extends javax.swing.JFrame {
      */
     public Doctor() {
         initComponents();
-        Diagnostico.addMouseListener(new java.awt.event.MouseAdapter() {
-         public void mouseClicked(java.awt.event.MouseEvent evt) {
-           jTabbedPane1.setSelectedIndex(0); 
-         }
-        public void mouseEntered(java.awt.event.MouseEvent evt) {
-           Diagnostico.setBackground(new Color(0, 102, 204)); 
-    }
-    public void mouseExited(java.awt.event.MouseEvent evt) {
-        Diagnostico.setBackground(new Color(10, 92, 184)); 
-    }
-});
-        Atencion.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jTabbedPane1.setSelectedIndex(1);
-        }
-        public void mouseEntered(java.awt.event.MouseEvent evt){
-        Atencion.setBackground(new Color(0, 102, 204));
-        }
-        public void mouseExited(java.awt.event.MouseEvent evt){
-        Atencion.setBackground(new Color(10, 92, 184));
-        }
-    });
-         Agenda.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jTabbedPane1.setSelectedIndex(2); 
-        }
-        public void mouseEntered(java.awt.event.MouseEvent evt){
-        Agenda.setBackground(new Color(0, 102, 204));
-        }
-        public void mouseExited(java.awt.event.MouseEvent evt){
-        Agenda.setBackground(new Color(10, 92, 184));
-        }
-    });
+        
 
         
     }
@@ -172,6 +140,12 @@ public class Doctor extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 DiagnosticoMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                DiagnosticoMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                DiagnosticoMouseExited(evt);
+            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 DiagnosticoMouseReleased(evt);
             }
@@ -194,6 +168,17 @@ public class Doctor extends javax.swing.JFrame {
         Diagnostico.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 52, 50));
 
         Atencion.setBackground(new java.awt.Color(10, 92, 184));
+        Atencion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                AtencionMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                AtencionMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                AtencionMouseExited(evt);
+            }
+        });
         Atencion.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -206,6 +191,17 @@ public class Doctor extends javax.swing.JFrame {
         Atencion.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 6, 60, 50));
 
         Agenda.setBackground(new java.awt.Color(10, 92, 184));
+        Agenda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                AgendaMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                AgendaMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                AgendaMouseExited(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -985,7 +981,57 @@ public class Doctor extends javax.swing.JFrame {
 
     private void DiagnosticoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DiagnosticoMouseClicked
         // TODO add your handling code here:
+    jTabbedPane1.setSelectedIndex(0); 
+
     }//GEN-LAST:event_DiagnosticoMouseClicked
+
+    private void DiagnosticoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DiagnosticoMouseEntered
+        // TODO add your handling code here:
+     Diagnostico.setBackground(new Color(0, 102, 204)); 
+
+    }//GEN-LAST:event_DiagnosticoMouseEntered
+
+    private void DiagnosticoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DiagnosticoMouseExited
+        // TODO add your handling code here:
+     Diagnostico.setBackground(new Color(10, 92, 184)); 
+
+    }//GEN-LAST:event_DiagnosticoMouseExited
+
+    private void AtencionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AtencionMouseClicked
+        // TODO add your handling code here:
+     jTabbedPane1.setSelectedIndex(1);
+
+    }//GEN-LAST:event_AtencionMouseClicked
+
+    private void AtencionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AtencionMouseEntered
+        // TODO add your handling code here:
+      Atencion.setBackground(new Color(0, 102, 204));
+
+    }//GEN-LAST:event_AtencionMouseEntered
+
+    private void AtencionMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AtencionMouseExited
+        // TODO add your handling code here:
+    Atencion.setBackground(new Color(10, 92, 184));
+
+    }//GEN-LAST:event_AtencionMouseExited
+
+    private void AgendaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AgendaMouseClicked
+        // TODO add your handling code here:
+    jTabbedPane1.setSelectedIndex(2); 
+
+    }//GEN-LAST:event_AgendaMouseClicked
+
+    private void AgendaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AgendaMouseEntered
+        // TODO add your handling code here:
+     Agenda.setBackground(new Color(0, 102, 204));
+
+    }//GEN-LAST:event_AgendaMouseEntered
+
+    private void AgendaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AgendaMouseExited
+        // TODO add your handling code here:
+     Agenda.setBackground(new Color(10, 92, 184));
+
+    }//GEN-LAST:event_AgendaMouseExited
 
     /**
      * @param args the command line arguments
