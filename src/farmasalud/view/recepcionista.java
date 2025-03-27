@@ -63,18 +63,6 @@ public class recepcionista extends javax.swing.JFrame {
         jLabel77 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         panelInicio = new javax.swing.JPanel();
-        jPanel14 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jPanel18 = new javax.swing.JPanel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        jPanel19 = new javax.swing.JPanel();
-        jLabel25 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
-        jLabel35 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaCitasHoy = new javax.swing.JTable();
         jPanel20 = new javax.swing.JPanel();
@@ -130,16 +118,10 @@ public class recepcionista extends javax.swing.JFrame {
         jTextField4 = new javax.swing.JTextField();
         jPanel7 = new javax.swing.JPanel();
         jLabel51 = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
-        jLabel52 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         jLabel53 = new javax.swing.JLabel();
-        jPanel11 = new javax.swing.JPanel();
-        jLabel54 = new javax.swing.JLabel();
         btnVerHistoria = new javax.swing.JButton();
-        btnVerLaboratorio = new javax.swing.JButton();
         btnVerMedicamentos = new javax.swing.JButton();
-        btnVerCertificados = new javax.swing.JButton();
         panelModificarPaciente = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
@@ -294,6 +276,9 @@ public class recepcionista extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 panelBtnAgendar1MouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                panelBtnAgendar1MouseEntered(evt);
+            }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 panelBtnAgendar1MouseExited(evt);
             }
@@ -397,138 +382,6 @@ public class recepcionista extends javax.swing.JFrame {
         panelInicio.setBackground(new java.awt.Color(255, 255, 255));
         panelInicio.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel14.setBackground(new java.awt.Color(232, 230, 229));
-        jPanel14.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("Total Pacientes");
-
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel12.setText("100");
-
-        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
-        jPanel14.setLayout(jPanel14Layout);
-        jPanel14Layout.setHorizontalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel14Layout.createSequentialGroup()
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel14Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel14Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 14, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel14Layout.setVerticalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel10)
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel14Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))
-                    .addGroup(jPanel14Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-        );
-
-        panelInicio.add(jPanel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 210, 150));
-
-        jPanel18.setBackground(new java.awt.Color(232, 230, 229));
-        jPanel18.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel23.setText("Total Doctores");
-
-        jLabel24.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel24.setText("100");
-
-        javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
-        jPanel18.setLayout(jPanel18Layout);
-        jPanel18Layout.setHorizontalGroup(
-            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel18Layout.createSequentialGroup()
-                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel18Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel18Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 10, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel18Layout.setVerticalGroup(
-            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel18Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel23)
-                .addGap(15, 15, 15)
-                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel17)
-                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
-
-        panelInicio.add(jPanel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, 200, 150));
-
-        jPanel19.setBackground(new java.awt.Color(232, 230, 229));
-        jPanel19.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jLabel26.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel26.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel26.setText("Total Citas");
-
-        jLabel35.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel35.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel35.setText("100");
-
-        javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
-        jPanel19.setLayout(jPanel19Layout);
-        jPanel19Layout.setHorizontalGroup(
-            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel19Layout.createSequentialGroup()
-                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel19Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 7, Short.MAX_VALUE))
-                    .addGroup(jPanel19Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel25)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel35, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel19Layout.setVerticalGroup(
-            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel19Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel26)
-                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel19Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel19Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(11, Short.MAX_VALUE))
-        );
-
-        panelInicio.add(jPanel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 50, 190, 150));
-
         tablaCitasHoy.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         tablaCitasHoy.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -545,7 +398,7 @@ public class recepcionista extends javax.swing.JFrame {
         tablaCitasHoy.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tablaCitasHoy);
 
-        panelInicio.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 270, 720, 110));
+        panelInicio.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 720, 270));
 
         jPanel20.setBackground(new java.awt.Color(232, 230, 229));
         jPanel20.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -572,7 +425,7 @@ public class recepcionista extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        panelInicio.add(jPanel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 230, 718, -1));
+        panelInicio.add(jPanel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, 718, -1));
 
         jTabbedPane1.addTab("Inicio", panelInicio);
 
@@ -735,7 +588,12 @@ public class recepcionista extends javax.swing.JFrame {
         panelAgendar2.add(jLabel42, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 160, 160, 20));
 
         cbbTipoCita.setBackground(new java.awt.Color(0, 0, 0, 0));
-        cbbTipoCita.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbbTipoCita.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Seleccione>", "Odontologia", "General", "Pediatria", "Cardiologia", "Oftamologia", " " }));
+        cbbTipoCita.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbbTipoCitaActionPerformed(evt);
+            }
+        });
         panelAgendar2.add(cbbTipoCita, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 280, 180, 30));
 
         cbbMedicos.setBackground(new java.awt.Color(0, 0, 0, 0));
@@ -754,7 +612,11 @@ public class recepcionista extends javax.swing.JFrame {
         panelAgendar2.add(jLabel62, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 160, 64, -1));
 
         cbbConsultorio.setBackground(new java.awt.Color(0, 0, 0, 0));
-        cbbConsultorio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbbConsultorio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbbConsultorioActionPerformed(evt);
+            }
+        });
         panelAgendar2.add(cbbConsultorio, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 190, 90, 30));
 
         jLabel71.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -821,32 +683,7 @@ public class recepcionista extends javax.swing.JFrame {
                 .addGap(0, 150, Short.MAX_VALUE))
         );
 
-        panelInformes.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, 120, 170));
-
-        jPanel8.setBackground(new java.awt.Color(232, 230, 229));
-        jPanel8.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jLabel52.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel52.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel52.setText("LABORATORIO");
-
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel52, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addComponent(jLabel52)
-                .addGap(0, 150, Short.MAX_VALUE))
-        );
-
-        panelInformes.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 160, 120, 170));
+        panelInformes.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 160, 120, 170));
 
         jPanel10.setBackground(new java.awt.Color(232, 230, 229));
         jPanel10.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -873,44 +710,12 @@ public class recepcionista extends javax.swing.JFrame {
 
         panelInformes.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 160, 120, 170));
 
-        jPanel11.setBackground(new java.awt.Color(232, 230, 229));
-        jPanel11.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jLabel54.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel54.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel54.setText("CERTIFICADOS");
-
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel54, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addComponent(jLabel54)
-                .addGap(0, 150, Short.MAX_VALUE))
-        );
-
-        panelInformes.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 160, 120, 170));
-
         btnVerHistoria.setBackground(new java.awt.Color(10, 92, 184));
         btnVerHistoria.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnVerHistoria.setForeground(new java.awt.Color(255, 255, 255));
         btnVerHistoria.setText("VER");
         btnVerHistoria.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelInformes.add(btnVerHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 340, 120, 40));
-
-        btnVerLaboratorio.setBackground(new java.awt.Color(10, 92, 184));
-        btnVerLaboratorio.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnVerLaboratorio.setForeground(new java.awt.Color(255, 255, 255));
-        btnVerLaboratorio.setText("VER");
-        btnVerLaboratorio.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelInformes.add(btnVerLaboratorio, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 340, 120, 40));
+        panelInformes.add(btnVerHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 340, 120, 40));
 
         btnVerMedicamentos.setBackground(new java.awt.Color(10, 92, 184));
         btnVerMedicamentos.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -923,13 +728,6 @@ public class recepcionista extends javax.swing.JFrame {
             }
         });
         panelInformes.add(btnVerMedicamentos, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 340, 120, 40));
-
-        btnVerCertificados.setBackground(new java.awt.Color(10, 92, 184));
-        btnVerCertificados.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnVerCertificados.setForeground(new java.awt.Color(255, 255, 255));
-        btnVerCertificados.setText("VER");
-        btnVerCertificados.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelInformes.add(btnVerCertificados, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 340, 120, 40));
 
         jTabbedPane1.addTab("Modificar", panelInformes);
 
@@ -1316,7 +1114,7 @@ public class recepcionista extends javax.swing.JFrame {
     }//GEN-LAST:event_panelBtnAgregarPaciente1MouseExited
 
     private void panelBtnInicio1MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnInicio1MouseMoved
-        panelBtnInicio1.setBackground(new Color(29, 64, 92));
+        panelBtnInicio1.setBackground(new Color(10,92,184));
     }//GEN-LAST:event_panelBtnInicio1MouseMoved
 
     private void panelBtnInicio1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnInicio1MouseClicked
@@ -1324,11 +1122,10 @@ public class recepcionista extends javax.swing.JFrame {
     }//GEN-LAST:event_panelBtnInicio1MouseClicked
 
     private void panelBtnInicio1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnInicio1MouseExited
-        panelBtnInicio1.setBackground(new Color(19, 28, 70));
+        panelBtnInicio1.setBackground(new Color(28,43,110));
     }//GEN-LAST:event_panelBtnInicio1MouseExited
 
     private void panelBtnAgendar1MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnAgendar1MouseMoved
-        panelBtnAgendar1.setBackground(new Color(29, 64, 92));
     }//GEN-LAST:event_panelBtnAgendar1MouseMoved
 
     private void panelBtnAgendar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnAgendar1MouseClicked
@@ -1336,7 +1133,7 @@ public class recepcionista extends javax.swing.JFrame {
     }//GEN-LAST:event_panelBtnAgendar1MouseClicked
 
     private void panelBtnAgendar1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnAgendar1MouseExited
-        panelBtnAgendar1.setBackground(new Color(19, 28, 70));
+        panelBtnAgendar1.setBackground(new Color(28,43,110));
     }//GEN-LAST:event_panelBtnAgendar1MouseExited
 
     private void panelBtnModificarCita1MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnModificarCita1MouseMoved
@@ -1435,6 +1232,18 @@ public class recepcionista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_panelBtnInicio1MouseDragged
 
+    private void panelBtnAgendar1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnAgendar1MouseEntered
+      panelBtnAgendar1.setBackground(new Color(10,92,184));
+    }//GEN-LAST:event_panelBtnAgendar1MouseEntered
+
+    private void cbbTipoCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbTipoCitaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbbTipoCitaActionPerformed
+
+    private void cbbConsultorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbConsultorioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbbConsultorioActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1476,9 +1285,7 @@ public class recepcionista extends javax.swing.JFrame {
     private javax.swing.JButton btnCancelarActualizar;
     private javax.swing.JButton btnCancelarAgenda;
     private javax.swing.JButton btnSiguienteAgendar;
-    private javax.swing.JButton btnVerCertificados;
     private javax.swing.JButton btnVerHistoria;
-    private javax.swing.JButton btnVerLaboratorio;
     private javax.swing.JButton btnVerMedicamentos;
     private javax.swing.JComboBox<String> cbEps;
     private javax.swing.JComboBox<String> cbSexo;
@@ -1497,18 +1304,11 @@ public class recepcionista extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
@@ -1517,7 +1317,6 @@ public class recepcionista extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
@@ -1533,9 +1332,7 @@ public class recepcionista extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
-    private javax.swing.JLabel jLabel52;
     private javax.swing.JLabel jLabel53;
-    private javax.swing.JLabel jLabel54;
     private javax.swing.JLabel jLabel55;
     private javax.swing.JLabel jLabel56;
     private javax.swing.JLabel jLabel57;
@@ -1561,13 +1358,8 @@ public class recepcionista extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel77;
     private javax.swing.JLabel jLabel79;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel21;
     private javax.swing.JPanel jPanel3;
@@ -1575,7 +1367,6 @@ public class recepcionista extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
