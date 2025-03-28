@@ -4,8 +4,11 @@
  */
 package farmasalud.view;
 
+<<<<<<< HEAD
 import java.awt.Color;
 
+=======
+>>>>>>> 87b1c1934282e3bf20394221fefcc395dee2cc70
 /**
  *
  * @author usuario
@@ -29,6 +32,7 @@ public class admin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
+<<<<<<< HEAD
         jPanel1 = new javax.swing.JPanel();
         Panel_inicio = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -293,6 +297,36 @@ public class admin extends javax.swing.JFrame {
 
         jPanel2.add(Paneles, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 60, 1020, 710));
 
+=======
+        jPanel4 = new javax.swing.JPanel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 250, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 765, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 1050, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+>>>>>>> 87b1c1934282e3bf20394221fefcc395dee2cc70
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -307,6 +341,7 @@ public class admin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+<<<<<<< HEAD
     private void Panel_inicioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Panel_inicioMouseClicked
     Paneles.setSelectedIndex(0);           
     }//GEN-LAST:event_Panel_inicioMouseClicked
@@ -379,6 +414,8 @@ public class admin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField5ActionPerformed
 
+=======
+>>>>>>> 87b1c1934282e3bf20394221fefcc395dee2cc70
     /**
      * @param args the command line arguments
      */
@@ -415,6 +452,7 @@ public class admin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+<<<<<<< HEAD
     private javax.swing.JPanel Gestionar_doc;
     private javax.swing.JPanel Gestionar_recep;
     private javax.swing.JPanel Gestionar_salas;
@@ -444,5 +482,9 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
+=======
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
+>>>>>>> 87b1c1934282e3bf20394221fefcc395dee2cc70
     // End of variables declaration//GEN-END:variables
 }
