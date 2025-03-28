@@ -44,6 +44,17 @@ public class admin extends javax.swing.JFrame {
         Paneles = new javax.swing.JTabbedPane();
         Inicio = new javax.swing.JPanel();
         Gestionar_doc = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jTextField4 = new javax.swing.JTextField();
+        jTextField5 = new javax.swing.JTextField();
         Gestionar_recep = new javax.swing.JPanel();
         Gestionar_salas = new javax.swing.JPanel();
 
@@ -197,16 +208,58 @@ public class admin extends javax.swing.JFrame {
 
         Paneles.addTab("INICIO", Inicio);
 
-        javax.swing.GroupLayout Gestionar_docLayout = new javax.swing.GroupLayout(Gestionar_doc);
-        Gestionar_doc.setLayout(Gestionar_docLayout);
-        Gestionar_docLayout.setHorizontalGroup(
-            Gestionar_docLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1020, Short.MAX_VALUE)
-        );
-        Gestionar_docLayout.setVerticalGroup(
-            Gestionar_docLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 675, Short.MAX_VALUE)
-        );
+        Gestionar_doc.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "FORMULARIO", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setText("ESPECIALIDAD:");
+        jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 90, 30));
+
+        jLabel7.setText("NOMBRE:");
+        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 60, 30));
+
+        jLabel8.setText("APELLIDO:");
+        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 60, 30));
+
+        jLabel9.setText("TELEFONO:");
+        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 60, 30));
+
+        jLabel10.setText("NO. CEDULA:");
+        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 80, 30));
+
+        jTextField1.setText("jTextField1");
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 230, -1));
+
+        jTextField2.setText("jTextField1");
+        jPanel4.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 230, -1));
+
+        jTextField3.setText("jTextField1");
+        jPanel4.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 230, -1));
+
+        jTextField4.setText("jTextField1");
+        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField4ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 230, -1));
+
+        jTextField5.setText("jTextField1");
+        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField5ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, 230, -1));
+
+        Gestionar_doc.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 365, 340));
 
         Paneles.addTab("GESTIONAR_DOC", Gestionar_doc);
 
@@ -314,6 +367,18 @@ public class admin extends javax.swing.JFrame {
     Panel_salir.setBackground(new Color(10,92,184));
     }//GEN-LAST:event_Panel_salirMouseExited
 
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField4ActionPerformed
+
+    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -361,12 +426,23 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JPanel Panel_salir;
     private javax.swing.JTabbedPane Paneles;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
 }
