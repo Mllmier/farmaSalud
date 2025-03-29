@@ -146,6 +146,7 @@ public class Doctor extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1400, 580));
 
         jPanel2.setBackground(new java.awt.Color(10, 92, 184));
 
