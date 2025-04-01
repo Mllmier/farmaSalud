@@ -5,6 +5,8 @@
 package farmasalud.view;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -146,7 +148,6 @@ public class Doctor extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1400, 580));
 
         jPanel2.setBackground(new java.awt.Color(10, 92, 184));
 
@@ -344,6 +345,11 @@ public class Doctor extends javax.swing.JFrame {
         btnAddMedicamento.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAddMedicamento.setForeground(new java.awt.Color(255, 255, 255));
         btnAddMedicamento.setText("Agregar");
+        btnAddMedicamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddMedicamentoActionPerformed(evt);
+            }
+        });
 
         jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
 
@@ -632,6 +638,11 @@ public class Doctor extends javax.swing.JFrame {
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField3ActionPerformed(evt);
+            }
+        });
+        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField3KeyTyped(evt);
             }
         });
 
@@ -987,6 +998,14 @@ public class Doctor extends javax.swing.JFrame {
     private void DiagnosticoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DiagnosticoMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_DiagnosticoMouseClicked
+
+    private void btnAddMedicamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMedicamentoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAddMedicamentoActionPerformed
+
+    private void jTextField3KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyTyped
+    
+    }//GEN-LAST:event_jTextField3KeyTyped
 
     /**
      * @param args the command line arguments
