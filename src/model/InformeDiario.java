@@ -4,19 +4,17 @@
  */
 package model;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 /**
  *
  * @author Maria liz
  */
-public class recepcionista {
+public class InformeDiario {
 
-    private String nombre;
-    private String apellidos;
-    private String cedula;
-    private String edad;
-    private rol role;
-    private LocalDate fechaNacimiento;
+    private int idInforme;
+    private Date fecha;
+    private String resumen;
+    
 
 }
