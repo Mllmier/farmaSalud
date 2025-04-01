@@ -4,10 +4,19 @@
  */
 package model;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author Maria liz
  */
 public class paciente {
+    private String nombre;
+    private String apellidos;
+    private String cedula;
+    private String edad;
+    private rol role;
+    
+    
     
 }

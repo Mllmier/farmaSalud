@@ -5,18 +5,18 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  *
  * @author Maria liz
  */
-public class recepcionista {
-
-    private String nombre;
-    private String apellidos;
-    private String cedula;
-    private String edad;
-    private rol role;
-    private LocalDate fechaNacimiento;
-
+public class cita {
+    private LocalDate fechaCita;
+    private String tipoCita;
+    private String medico;
+    private LocalTime hora;
+    private Boolean estadoCita;
+    private String consultorio;
+    
 }
