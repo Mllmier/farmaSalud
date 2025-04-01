@@ -6,12 +6,8 @@ package model;
 
 /**
  *
- * @author Maria liz
+ * @author HP
  */
-public enum rol {
-    ADMINISTRADOR,
-    FARMACEUTICA,
-    PACIENTE,
-    MEDICO,
-    SECRETARIA
+public class Doctor {
+    
 }
