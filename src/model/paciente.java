@@ -5,7 +5,6 @@ import java.util.List;
 
 public class Paciente extends Persona {
     private String tipoSangre;
-    private String contactoEmergencia;
     private String alergias;
     private List<Cita> citas;
     private List<HistoriaMedica> historialMedico;
