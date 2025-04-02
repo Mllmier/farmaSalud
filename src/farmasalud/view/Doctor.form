@@ -56,7 +56,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="16" max="32767" attributes="0"/>
                   <Component id="jTabbedPane1" min="-2" pref="510" max="-2" attributes="0"/>
               </Group>
               <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
@@ -67,7 +67,7 @@
         <Container class="javax.swing.JPanel" name="jPanel2">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="b8" green="5c" red="a" type="rgb"/>
+              <Color blue="6e" green="2b" red="1c" type="rgb"/>
             </Property>
           </Properties>
 
@@ -153,7 +153,7 @@
             <Container class="javax.swing.JPanel" name="Diagnostico">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="b8" green="5c" red="a" type="rgb"/>
+                  <Color blue="6e" green="2b" red="1c" type="rgb"/>
                 </Property>
               </Properties>
               <Events>
@@ -206,7 +206,7 @@
             <Container class="javax.swing.JPanel" name="Atencion">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="b8" green="5c" red="a" type="rgb"/>
+                  <Color blue="6e" green="2b" red="1c" type="rgb"/>
                 </Property>
               </Properties>
 
@@ -254,7 +254,7 @@
             <Container class="javax.swing.JPanel" name="Agenda">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="b8" green="5c" red="a" type="rgb"/>
+                  <Color blue="6e" green="2b" red="1c" type="rgb"/>
                 </Property>
               </Properties>
 

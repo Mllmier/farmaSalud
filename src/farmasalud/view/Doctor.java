@@ -27,7 +27,7 @@ public class Doctor extends javax.swing.JFrame {
            Diagnostico.setBackground(new Color(0, 102, 204)); 
     }
     public void mouseExited(java.awt.event.MouseEvent evt) {
-        Diagnostico.setBackground(new Color(10, 92, 184)); 
+        Diagnostico.setBackground(new Color(28,43,110)); 
     }
 });
         Atencion.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -38,7 +38,7 @@ public class Doctor extends javax.swing.JFrame {
         Atencion.setBackground(new Color(0, 102, 204));
         }
         public void mouseExited(java.awt.event.MouseEvent evt){
-        Atencion.setBackground(new Color(10, 92, 184));
+        Atencion.setBackground(new Color(28,43,110));
         }
     });
          Agenda.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -49,7 +49,7 @@ public class Doctor extends javax.swing.JFrame {
         Agenda.setBackground(new Color(0, 102, 204));
         }
         public void mouseExited(java.awt.event.MouseEvent evt){
-        Agenda.setBackground(new Color(10, 92, 184));
+        Agenda.setBackground(new Color(28,43,110));
         }
     });
 
@@ -149,7 +149,7 @@ public class Doctor extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel2.setBackground(new java.awt.Color(10, 92, 184));
+        jPanel2.setBackground(new java.awt.Color(28, 43, 110));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -160,7 +160,7 @@ public class Doctor extends javax.swing.JFrame {
         lblIconRecepcion.setText("      ");
         lblIconRecepcion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
 
-        Diagnostico.setBackground(new java.awt.Color(10, 92, 184));
+        Diagnostico.setBackground(new java.awt.Color(28, 43, 110));
         Diagnostico.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
             }
@@ -195,7 +195,7 @@ public class Doctor extends javax.swing.JFrame {
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/diagnostico (1).png"))); // NOI18N
         Diagnostico.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 52, 50));
 
-        Atencion.setBackground(new java.awt.Color(10, 92, 184));
+        Atencion.setBackground(new java.awt.Color(28, 43, 110));
         Atencion.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -207,7 +207,7 @@ public class Doctor extends javax.swing.JFrame {
         jLabel43.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/examen (1).png"))); // NOI18N
         Atencion.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 6, 60, 50));
 
-        Agenda.setBackground(new java.awt.Color(10, 92, 184));
+        Agenda.setBackground(new java.awt.Color(28, 43, 110));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -903,7 +903,7 @@ public class Doctor extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );

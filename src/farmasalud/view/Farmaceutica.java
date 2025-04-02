@@ -143,7 +143,7 @@ public class Farmaceutica extends javax.swing.JFrame {
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
-        jPanel2.setBackground(new java.awt.Color(10, 92, 184));
+        jPanel2.setBackground(new java.awt.Color(28, 43, 110));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -154,7 +154,7 @@ public class Farmaceutica extends javax.swing.JFrame {
         lblIconRecepcion.setText("      ");
         lblIconRecepcion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
 
-        PanelInicio.setBackground(new java.awt.Color(10, 92, 184));
+        PanelInicio.setBackground(new java.awt.Color(28, 43, 110));
         PanelInicio.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 PanelInicioMouseClicked(evt);
@@ -203,7 +203,7 @@ public class Farmaceutica extends javax.swing.JFrame {
                         .addGap(14, 14, 14))))
         );
 
-        PanelEntrega.setBackground(new java.awt.Color(10, 92, 184));
+        PanelEntrega.setBackground(new java.awt.Color(28, 43, 110));
         PanelEntrega.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 PanelEntregaMouseClicked(evt);
@@ -242,7 +242,7 @@ public class Farmaceutica extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        PanelInventario.setBackground(new java.awt.Color(10, 92, 184));
+        PanelInventario.setBackground(new java.awt.Color(28, 43, 110));
         PanelInventario.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 PanelInventarioMouseClicked(evt);
@@ -283,7 +283,7 @@ public class Farmaceutica extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        Historial_Entrega.setBackground(new java.awt.Color(10, 92, 184));
+        Historial_Entrega.setBackground(new java.awt.Color(28, 43, 110));
         Historial_Entrega.setPreferredSize(new java.awt.Dimension(212, 63));
         Historial_Entrega.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -891,7 +891,7 @@ public class Farmaceutica extends javax.swing.JFrame {
 
     private void PanelInicioMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelInicioMouseExited
         // TODO add your handling code here:
-    PanelInicio.setBackground(new Color(10, 92, 184)); 
+    PanelInicio.setBackground(new Color(28,43,110)); 
 
     }//GEN-LAST:event_PanelInicioMouseExited
 
@@ -909,7 +909,7 @@ public class Farmaceutica extends javax.swing.JFrame {
 
     private void PanelEntregaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelEntregaMouseExited
         // TODO add your handling code here:
-    PanelEntrega.setBackground(new Color(10, 92, 184)); 
+    PanelEntrega.setBackground(new Color(28,43,110)); 
 
     }//GEN-LAST:event_PanelEntregaMouseExited
 
@@ -927,7 +927,7 @@ public class Farmaceutica extends javax.swing.JFrame {
 
     private void PanelInventarioMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelInventarioMouseExited
         // TODO add your handling code here:
-    PanelInventario.setBackground(new Color(10, 92, 184)); 
+    PanelInventario.setBackground(new Color(28,43,110)); 
 
     }//GEN-LAST:event_PanelInventarioMouseExited
 
@@ -945,7 +945,7 @@ public class Farmaceutica extends javax.swing.JFrame {
 
     private void Historial_EntregaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Historial_EntregaMouseExited
         // TODO add your handling code here:
-     Historial_Entrega.setBackground(new Color(10, 92, 184)); 
+     Historial_Entrega.setBackground(new Color(28,43,110)); 
 
     }//GEN-LAST:event_Historial_EntregaMouseExited
 

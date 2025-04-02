@@ -3,11 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-
+import java.util.*;
 /**
  *
  * @author HP
  */
 public class Doctor {
-    
+    private int IdMedico;
+    private List<paciente>pacientesAtendidos;
 }

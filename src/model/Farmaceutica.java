@@ -9,5 +9,8 @@ package model;
  * @author HP
  */
 public class Farmaceutica {
+    private int IdFarmaceutica;
+   
+    
     
 }
