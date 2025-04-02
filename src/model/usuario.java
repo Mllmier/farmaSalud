@@ -1,22 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author Maria liz
- */
-public class usuario {
+public class Usuario {
     private String email;
     private String password;
-    private rol role; //accedes al rol
+    private Rol role;
+    private boolean activo;
+    private Persona persona; 
 
-    public usuario(String email, String password, rol role) {
+    public Usuario(String email, String password, Rol role, Persona persona) {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.persona = persona;
+        this.activo = true;
     }
 
     public String getEmail() {
@@ -27,21 +23,4 @@ public class usuario {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public rol getRole() {
-        return role;
-    }
-
-    public void setRole(rol role) {
-        this.role = role;
-    }
-    
-    
 }
