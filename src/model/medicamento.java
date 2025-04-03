@@ -12,6 +12,10 @@ public class Medicamento {
     private Date fechaVencimiento;
     private boolean disponible;
     private double precio;
+    public enum estadoMedicamento{
+      PENDIENTE,
+      ENTREGADO
+     }
 
     public Medicamento(int idMedicamento, String nombre, String descripcion, String laboratorio, int cantidad, String lote, Date fechaVencimiento, boolean disponible, double precio) {
         this.idMedicamento = idMedicamento;

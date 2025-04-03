@@ -31,14 +31,6 @@ public class Paciente extends Persona {
         this.tipoSangre = tipoSangre;
     }
 
-    public String getContactoEmergencia() {
-        return contactoEmergencia;
-    }
-
-    public void setContactoEmergencia(String contactoEmergencia) {
-        this.contactoEmergencia = contactoEmergencia;
-    }
-
     public String getAlergias() {
         return alergias;
     }
