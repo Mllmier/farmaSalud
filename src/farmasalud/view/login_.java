@@ -78,7 +78,7 @@ public class login_ extends javax.swing.JFrame {
                 jTextField1ActionPerformed(evt);
             }
         });
-        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(119, 178, 300, 29));
+        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, 300, 29));
 
         jComboBox1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Seleccione una opcion>", "Administrador", "Doctor", "Recepcionista", "Farmaceutica" }));
@@ -163,59 +163,56 @@ public class login_ extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-   String email = jTextField1.getText().trim();
-String password = new String(jPasswordField1.getPassword());
+        String email = jTextField1.getText().trim();
+        String password = new String(jPasswordField1.getPassword());
 
-// Validar campos vacíos
-if(email.isEmpty() || password.isEmpty()) {
-    JOptionPane.showMessageDialog(this, 
-        "Email y contraseña son requeridos", 
-        "Error", 
-        JOptionPane.ERROR_MESSAGE);
-    return;
-}
-
-UsuarioDAO usuarioDAO = new UsuarioDAO();
-Usuario usuario = usuarioDAO.validarCredenciales(email, password);
-
-if(usuario != null) {
-    if(usuarioDAO.esAdministrador(usuario)) {
-        JOptionPane.showMessageDialog(this, 
-            "Bienvenido Administrador", 
-            "Login Exitoso", 
-            JOptionPane.INFORMATION_MESSAGE);
-        new admin().setVisible(true);
-        this.dispose();
-    } 
-    else if(usuarioDAO.esRecepcionista(usuario)) {
-        JOptionPane.showMessageDialog(this,
-            "Bienvenida Recepcionista",
-            "Login Exitoso",
-            JOptionPane.INFORMATION_MESSAGE);
-        new recepcionista().setVisible(true);
-        this.dispose();
-    } 
-    else if(usuarioDAO.esDoctor(usuario)) {
-        JOptionPane.showMessageDialog(this,
-            "Bienvenido Doctor",
-            "Login Exitoso",
-            JOptionPane.INFORMATION_MESSAGE);
-        new Doctor().setVisible(true);
-        this.dispose();
-    } 
-    else {
-        JOptionPane.showMessageDialog(this, 
-            "Inicio de sesión exitoso (no es medico )", 
-            "Login Exitoso", 
-            JOptionPane.INFORMATION_MESSAGE);
+        if (email.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Email y contraseña son requeridos",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    } 
-    else {
-    JOptionPane.showMessageDialog(this, 
-        "Email o contraseña incorrectos", 
-        "Error de Login", 
-        JOptionPane.ERROR_MESSAGE);
-    }
+
+        //instancia para acceder al metodo validar
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        //accedemos al metodo
+        Usuario usuario = usuarioDAO.validarCredenciales(email, password);
+
+        if (usuario != null) {
+            if (usuarioDAO.esAdministrador(usuario)) {
+                JOptionPane.showMessageDialog(this,
+                        "Bienvenido Administrador",
+                        "Login Exitoso",
+                        JOptionPane.INFORMATION_MESSAGE);
+                new admin().setVisible(true);
+                this.dispose();
+            } else if (usuarioDAO.esRecepcionista(usuario)) {
+                JOptionPane.showMessageDialog(this,
+                        "Bienvenida Recepcionista",
+                        "Login Exitoso",
+                        JOptionPane.INFORMATION_MESSAGE);
+                new recepcionista().setVisible(true);
+                this.dispose();
+            } else if (usuarioDAO.esDoctor(usuario)) {
+                JOptionPane.showMessageDialog(this,
+                        "Bienvenido Doctor",
+                        "Login Exitoso",
+                        JOptionPane.INFORMATION_MESSAGE);
+                new Doctor().setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Inicio de sesión exitoso (no es medico )",
+                        "Login Exitoso",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Email o contraseña incorrectos",
+                    "Error de Login",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
