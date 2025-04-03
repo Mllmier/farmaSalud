@@ -185,7 +185,6 @@ public class recepcionista extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jPanel12 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        panelBtnExit = new javax.swing.JPanel();
         jLabel79 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1450,23 +1449,6 @@ public class recepcionista extends javax.swing.JFrame {
 
         jPanel1.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 190, 970, 600));
 
-        panelBtnExit.setBackground(new java.awt.Color(255, 255, 255));
-        panelBtnExit.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                panelBtnExitMouseMoved(evt);
-            }
-        });
-        panelBtnExit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panelBtnExitMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                panelBtnExitMouseExited(evt);
-            }
-        });
-        panelBtnExit.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel1.add(panelBtnExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 0, 40, 30));
-
         jLabel79.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel79.setText("X");
         jPanel1.add(jLabel79, new org.netbeans.lib.awtextra.AbsoluteConstraints(1270, 10, 20, 30));
@@ -1555,18 +1537,6 @@ public class recepcionista extends javax.swing.JFrame {
     private void panelBtnModificarPaciente1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnModificarPaciente1MouseExited
     panelBtnModificarPaciente1.setBackground(new Color(19, 28, 70));
     }//GEN-LAST:event_panelBtnModificarPaciente1MouseExited
-
-    private void panelBtnExitMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnExitMouseMoved
-        panelBtnExit.setBackground(new Color(255, 0, 0));
-    }//GEN-LAST:event_panelBtnExitMouseMoved
-
-    private void panelBtnExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnExitMouseClicked
-        exit(0);
-    }//GEN-LAST:event_panelBtnExitMouseClicked
-
-    private void panelBtnExitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnExitMouseExited
-        panelBtnExit.setBackground(new Color(255, 255, 255));
-    }//GEN-LAST:event_panelBtnExitMouseExited
 
     private void panelBtnInicio1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBtnInicio1MouseEntered
  panelBtnInicio1.setBackground(new Color (230,230,230));
@@ -1903,7 +1873,6 @@ char c=evt.getKeyChar();
     private javax.swing.JPanel panelAgendar1;
     private javax.swing.JPanel panelBtnAgendar1;
     private javax.swing.JPanel panelBtnAgregarPaciente1;
-    private javax.swing.JPanel panelBtnExit;
     private javax.swing.JPanel panelBtnInformes1;
     private javax.swing.JPanel panelBtnInicio1;
     private javax.swing.JPanel panelBtnModificarCita1;
