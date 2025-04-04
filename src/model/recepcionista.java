@@ -6,7 +6,7 @@ public class Recepcionista extends Persona {
     private String codigoEmpleado;
     private LocalDate fechaContratacion;
     private Paciente paciente;
-   // private Doctor medico;
+    private Medico medico;
     private String turno;
 
     public Recepcionista(String numeroDocumento, String nombres, String apellidos, String codigoEmpleado) {

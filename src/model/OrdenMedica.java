@@ -13,7 +13,7 @@ import java.util.List;
 public class OrdenMedica {
     private  String dosis;
     private String indicaciones;
-    //private Doctor doctor;
+    private Medico medico;
     private String fecha;
     private Paciente paciente;
     private List<Medicamento> medicamentos;
