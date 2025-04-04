@@ -1,49 +1,18 @@
-
 package model;
 
-public class administrador {
-   private String nombre;
-   private String apellido;
-   private String cedula;
-   private rol rol;
 
-    public String getNombre() {
-        return nombre;
+
+public class Administrador extends Persona {
+    private String codigoEmpleado;
+
+    public Administrador(String numeroDocumento, String nombres, String apellidos, String codigoEmpleado) {
+        super(numeroDocumento, nombres, apellidos);
+        this.codigoEmpleado = codigoEmpleado;
+    }
+        
+    public String getCodigoEmpleado() {
+        return codigoEmpleado;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
 
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getCedula() {
-        return cedula;
-    }
-
-    public void setCedula(String cedula) {
-        this.cedula = cedula;
-    }
-
-    public rol getRol() {
-        return rol;
-    }
-
-    public void setRol(rol rol) {
-        this.rol = rol;
-    }
-
-    public administrador(String nombre, String apellido, String cedula, rol rol) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.cedula = cedula;
-        this.rol = rol;
-    }
-   
 }

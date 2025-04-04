@@ -1,22 +1,42 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.time.LocalDate;
 
-/**
- *
- * @author Maria liz
- */
-public class recepcionista {
+public class Recepcionista extends Persona {
+    private String codigoEmpleado;
+    private LocalDate fechaContratacion;
+    private Paciente paciente;
+   // private Doctor medico;
+    private String turno;
 
-    private String nombre;
-    private String apellidos;
-    private String cedula;
-    private String edad;
-    private rol role;
-    private LocalDate fechaNacimiento;
+    public Recepcionista(String numeroDocumento, String nombres, String apellidos, String codigoEmpleado) {
+        super(numeroDocumento, nombres, apellidos);
+        this.codigoEmpleado = codigoEmpleado;
+    }
 
+    public String getCodigoEmpleado() {
+        return codigoEmpleado;
+    }
+
+    public void setCodigoEmpleado(String codigoEmpleado) {
+        this.codigoEmpleado = codigoEmpleado;
+    }
+
+    public LocalDate getFechaContratacion() {
+        return fechaContratacion;
+    }
+
+    public void setFechaContratacion(LocalDate fechaContratacion) {
+        this.fechaContratacion = fechaContratacion;
+    }
+
+    public String getTurno() {
+        return turno;
+    }
+
+    public void setTurno(String turno) {
+        this.turno = turno;
+    }
+
+   
 }

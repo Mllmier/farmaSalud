@@ -20,6 +20,7 @@ public class admin extends javax.swing.JFrame {
      */
     public admin() {
         initComponents();
+        
     }
 
     /**
@@ -979,6 +980,7 @@ public class admin extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+
                 new admin().setVisible(true);
             }
         });
