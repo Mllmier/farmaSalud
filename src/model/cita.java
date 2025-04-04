@@ -11,7 +11,7 @@ public class Cita {
     private String motivo;
     private EstadoCita estado;
     private Paciente paciente;
-    private Doctor doctor;
+   // private Doctor doctor;
 
     public enum EstadoCita {
         PROGRAMADA,
@@ -23,7 +23,7 @@ public class Cita {
         this.fechaCita = fechaCita;
         this.hora = hora;
         this.paciente = paciente;
-        this.doctor = doctor;
+       // this.doctor = doctor;
         this.estado = EstadoCita.PROGRAMADA;
     }
 

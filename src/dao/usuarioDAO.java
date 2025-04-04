@@ -14,7 +14,7 @@ import model.usuario;
 public class usuarioDAO {
     
     //admin creado con email y password
-    private static final usuario usuario_predeterminado = new usuario("maria@gmail.com ", "karen123", rol.ADMINISTRADOR);
+   private static final usuario usuario_predeterminado = new usuario("maria@gmail.com ", "karen123", rol.ADMINISTRADOR);
     
     public usuario validarCredenciales(String email, String password) {
         return usuario_predeterminado;
