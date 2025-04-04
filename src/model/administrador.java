@@ -9,7 +9,7 @@ public class Administrador extends Persona {
         super(numeroDocumento, nombres, apellidos);
         this.codigoEmpleado = codigoEmpleado;
     }
-
+        
     public String getCodigoEmpleado() {
         return codigoEmpleado;
     }

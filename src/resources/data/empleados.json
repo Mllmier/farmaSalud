@@ -1,3 +1,26 @@
-{
-    "name": "Maria liz"
-}
+[
+  {
+    "name": "Maria Liz",
+    "apellido": "Gonzalez",
+    "correo": "maria@example.com",
+    "cedula": "123456789",
+    "telefono": "3001234567",
+    "especialidad": "Cardiólogo"
+  },
+  {
+    "name": "Juan",
+    "apellido": "Pérez",
+    "correo": "juan@example.com",
+    "cedula": "987654321",
+    "telefono": "3107654321",
+    "especialidad": "Pediatra"
+  },
+  {
+    "name": "Oscar de Jesus",
+    "apellido": "Perez Perez",
+    "correo": "perezperez@gmail.com",
+    "cedula": "1234432234",
+    "telefono": "1002324435",
+    "especialidad": "Medico General"
+  }
+]

@@ -4,24 +4,127 @@
  */
 package farmasalud.view;
 
+import dao.MedicoDAO;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import model.Medico;
 
 /**
  *
  * @author usuario
  */
-
 public class admin extends javax.swing.JFrame {
+
+    private DefaultTableModel tableModel;
+    private MedicoDAO medicoDAO = new MedicoDAO();
 
     /**
      * Creates new form admin
      */
     public admin() {
         initComponents();
+        setupTableModel();
+        cargarDatosEnTabla();
+
     }
 
+    private void setupTableModel() {
+        tableModel = (DefaultTableModel) jTable1.getModel();
+    }
+
+    private void guardarMedicoDesdeFormulario() {
+        try {
+            String nombre = txtNombre.getText().trim();
+            String apellidos = txtApellidos.getText().trim();
+            String correo = txtCorreo.getText().trim();
+            String cedula = txtCedula.getText().trim();
+            String telefono = txtTelefono.getText().trim();
+            String especialidad = cbEspecialidad.getText().toString();
+
+            if (nombre.isEmpty() || apellidos.isEmpty() || correo.isEmpty()
+                    || cedula.isEmpty() || telefono.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Todos los campos son obligatorios",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Medico nuevoMedico = new Medico(nombre, apellidos, correo, cedula, telefono, especialidad);
+
+            medicoDAO.guardarMedico(nuevoMedico);
+
+            JOptionPane.showMessageDialog(this,
+                    "Médico guardado exitosamente:\n"
+                    + "Nombre: " + nombre + " " + apellidos + "\n"
+                    + "Especialidad: " + especialidad,
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            // 6. Limpiar campos
+            limpiarFormulario();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al guardar médico: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void limpiarFormulario() {
+        txtNombre.setText("");
+        txtApellidos.setText("");
+        txtCorreo.setText("");
+        txtCedula.setText("");
+        txtTelefono.setText("");
+        cbEspecialidad.setText("");
+    }
+
+    private void initTableModel() {
+        tableModel = new DefaultTableModel(
+            new Object[]{"Nombre", "Apellidos", "Correo", "Cédula", "Teléfono", "Especialidad"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        jTable1.setModel(tableModel); 
+    }
+    
+    private void cargarDatosEnTabla() {
+        tableModel.setRowCount(0);
+        
+        List<Medico> medicos = medicoDAO.cargarTodos();
+        
+        for (Medico medico : medicos) {
+            Object[] row = {
+                medico.getNombre(),
+                medico.getApellido(),
+                medico.getCorreo(),
+                medico.getCedula(),
+                medico.getTelefono(),
+                medico.getEspecialidad()
+            };
+            tableModel.addRow(row);
+        }
+    }
+    
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        cargarDatosEnTabla();
+        JOptionPane.showMessageDialog(this, 
+            "Tabla actualizada correctamente", 
+            "Actualización", 
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,16 +153,16 @@ public class admin extends javax.swing.JFrame {
         jPanel10 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtApellidos = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        Jtextfielcorreo = new javax.swing.JTextField();
+        txtCorreo = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
+        txtCedula = new javax.swing.JTextField();
+        txtTelefono = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        cbEspecialidad = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
@@ -74,6 +177,7 @@ public class admin extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -286,7 +390,7 @@ public class admin extends javax.swing.JFrame {
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 655, Short.MAX_VALUE)
+            .addGap(0, 615, Short.MAX_VALUE)
         );
 
         Paneles_jtablepane.addTab("INICIO", jPanel8);
@@ -301,76 +405,76 @@ public class admin extends javax.swing.JFrame {
         jLabel5.setText("NOMBRE:");
         jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 60, 30));
 
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setBorder(null);
-        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtNombre.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtNombre.setBorder(null);
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField1KeyTyped(evt);
+                txtNombreKeyTyped(evt);
             }
         });
-        jPanel4.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 250, 20));
+        jPanel4.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 250, 20));
 
         jLabel7.setText("APELLIDOS:");
         jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 90, 30));
 
-        jTextField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField2.setBorder(null);
-        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtApellidos.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtApellidos.setBorder(null);
+        txtApellidos.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField2KeyTyped(evt);
+                txtApellidosKeyTyped(evt);
             }
         });
-        jPanel4.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 250, 20));
+        jPanel4.add(txtApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 250, 20));
 
         jLabel8.setText("CORREO:");
         jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 90, 30));
 
-        Jtextfielcorreo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        Jtextfielcorreo.setBorder(null);
-        Jtextfielcorreo.addFocusListener(new java.awt.event.FocusAdapter() {
+        txtCorreo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtCorreo.setBorder(null);
+        txtCorreo.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                JtextfielcorreoFocusLost(evt);
+                txtCorreoFocusLost(evt);
             }
         });
-        jPanel4.add(Jtextfielcorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 250, 20));
+        jPanel4.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 250, 20));
 
         jLabel9.setText("C.C :");
         jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, 30, 30));
 
-        jTextField4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField4.setBorder(null);
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        txtCedula.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtCedula.setBorder(null);
+        txtCedula.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                txtCedulaActionPerformed(evt);
             }
         });
-        jTextField4.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField4KeyTyped(evt);
+                txtCedulaKeyTyped(evt);
             }
         });
-        jPanel4.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 150, 250, 20));
+        jPanel4.add(txtCedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 150, 250, 20));
 
-        jTextField6.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField6.setBorder(null);
-        jTextField6.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtTelefono.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtTelefono.setBorder(null);
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField6KeyTyped(evt);
+                txtTelefonoKeyTyped(evt);
             }
         });
-        jPanel4.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 250, 20));
+        jPanel4.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 250, 20));
 
         jLabel11.setText("TELEFONO :");
         jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 70, 30));
 
-        jTextField7.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField7.setBorder(null);
-        jTextField7.addKeyListener(new java.awt.event.KeyAdapter() {
+        cbEspecialidad.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        cbEspecialidad.setBorder(null);
+        cbEspecialidad.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField7KeyTyped(evt);
+                cbEspecialidadKeyTyped(evt);
             }
         });
-        jPanel4.add(jTextField7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 250, 20));
+        jPanel4.add(cbEspecialidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 250, 20));
 
         jLabel12.setText("ESPECIALIDAD :");
         jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, 90, 30));
@@ -400,6 +504,11 @@ public class admin extends javax.swing.JFrame {
         jPanel4.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 210, 250, 10));
 
         jPanel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel5MouseClicked(evt);
+            }
+        });
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
@@ -429,9 +538,17 @@ public class admin extends javax.swing.JFrame {
 
         jPanel4.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 500, 350, 60));
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 570, -1, -1));
+
         jPanel10.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 393, 630));
 
-        jTable1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "DOCTORES DISPONIBLES", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+        jTable1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -778,7 +895,7 @@ public class admin extends javax.swing.JFrame {
 
         Paneles_jtablepane.addTab("Gestion_salas", jPanel12);
 
-        jPanel1.add(Paneles_jtablepane, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 80, 980, 690));
+        jPanel1.add(Paneles_jtablepane, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 120, 980, 650));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -803,7 +920,7 @@ public class admin extends javax.swing.JFrame {
     }//GEN-LAST:event_Panel_doctorMouseClicked
 
     private void Panel_recepcionistasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Panel_recepcionistasMouseClicked
-    Paneles_jtablepane.setSelectedIndex(2);
+        Paneles_jtablepane.setSelectedIndex(2);
     }//GEN-LAST:event_Panel_recepcionistasMouseClicked
 
     private void Panel_salasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Panel_salasMouseClicked
@@ -811,132 +928,132 @@ public class admin extends javax.swing.JFrame {
     }//GEN-LAST:event_Panel_salasMouseClicked
 
     private void Panel_inicioMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Panel_inicioMouseEntered
-        Panel_inicio.setBackground(new Color(10,132,215));
+        Panel_inicio.setBackground(new Color(10, 132, 215));
     }//GEN-LAST:event_Panel_inicioMouseEntered
 
     private void Panel_doctorMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Panel_doctorMouseEntered
-        Panel_doctor.setBackground(new Color(10,132,215));
+        Panel_doctor.setBackground(new Color(10, 132, 215));
     }//GEN-LAST:event_Panel_doctorMouseEntered
 
     private void Panel_recepcionistasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Panel_recepcionistasMouseEntered
-        Panel_recepcionistas.setBackground(new Color(10,132,215));
+        Panel_recepcionistas.setBackground(new Color(10, 132, 215));
     }//GEN-LAST:event_Panel_recepcionistasMouseEntered
 
     private void Panel_salasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Panel_salasMouseEntered
-        Panel_salas.setBackground(new Color(10,132,215));
+        Panel_salas.setBackground(new Color(10, 132, 215));
     }//GEN-LAST:event_Panel_salasMouseEntered
 
     private void Btn_salirMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Btn_salirMouseEntered
-        Btn_salir.setBackground(new Color(10,132,215));
+        Btn_salir.setBackground(new Color(10, 132, 215));
     }//GEN-LAST:event_Btn_salirMouseEntered
 
     private void Panel_inicioMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Panel_inicioMouseExited
-        Panel_inicio.setBackground(new Color(10,92,184));
+        Panel_inicio.setBackground(new Color(10, 92, 184));
     }//GEN-LAST:event_Panel_inicioMouseExited
 
     private void Panel_doctorMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Panel_doctorMouseExited
-        Panel_doctor.setBackground(new Color(10,92,184));
+        Panel_doctor.setBackground(new Color(10, 92, 184));
     }//GEN-LAST:event_Panel_doctorMouseExited
 
     private void Panel_recepcionistasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Panel_recepcionistasMouseExited
-        Panel_recepcionistas.setBackground(new Color(10,92,184));
+        Panel_recepcionistas.setBackground(new Color(10, 92, 184));
     }//GEN-LAST:event_Panel_recepcionistasMouseExited
 
     private void Panel_salasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Panel_salasMouseExited
-        Panel_salas.setBackground(new Color(10,92,184));
+        Panel_salas.setBackground(new Color(10, 92, 184));
     }//GEN-LAST:event_Panel_salasMouseExited
 
     private void Btn_salirMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Btn_salirMouseExited
-        Btn_salir.setBackground(new Color(10,92,184));
+        Btn_salir.setBackground(new Color(10, 92, 184));
     }//GEN-LAST:event_Btn_salirMouseExited
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void txtCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCedulaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_txtCedulaActionPerformed
 
-    private void jTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyTyped
-                                    
-    char c = evt.getKeyChar();
-    
-    if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
-        evt.consume();
-        JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
-    }
-    }//GEN-LAST:event_jTextField1KeyTyped
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
 
-    private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
-                                    
-    char c = evt.getKeyChar();
-    if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
-        evt.consume();
-        JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
-    }
-    }//GEN-LAST:event_jTextField2KeyTyped
-
-    private void jTextField7KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField7KeyTyped
         char c = evt.getKeyChar();
-    if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
-        evt.consume();
-        JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
-    }
-    }//GEN-LAST:event_jTextField7KeyTyped
 
-    private void jTextField4KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField4KeyTyped
-        char c = evt.getKeyChar();
-        if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE /*&& c != '.'*/) {
-            evt.consume(); 
-            JOptionPane.showMessageDialog(null, "Solo se permiten números", "Error", JOptionPane.WARNING_MESSAGE);
+        if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jTextField4KeyTyped
+    }//GEN-LAST:event_txtNombreKeyTyped
 
-    private void jTextField6KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField6KeyTyped
+    private void txtApellidosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidosKeyTyped
+
+        char c = evt.getKeyChar();
+        if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_txtApellidosKeyTyped
+
+    private void cbEspecialidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbEspecialidadKeyTyped
+        char c = evt.getKeyChar();
+        if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_cbEspecialidadKeyTyped
+
+    private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
         char c = evt.getKeyChar();
         if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE /*&& c != '.'*/) {
             evt.consume();
             JOptionPane.showMessageDialog(null, "Solo se permiten números", "Error", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jTextField6KeyTyped
+    }//GEN-LAST:event_txtCedulaKeyTyped
 
-    private void JtextfielcorreoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_JtextfielcorreoFocusLost
-         String correo = Jtextfielcorreo.getText().trim();
-    // Regex para validar formato básico de correo (ej: usuario@dominio.com)
-    if (!correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-        JOptionPane.showMessageDialog(null, "Correo inválido. Ejemplo válido: usuario@dominio.com", "Error", JOptionPane.ERROR_MESSAGE);
-        Jtextfielcorreo.requestFocus(); // Regresa el foco al campo
-    }
-    }//GEN-LAST:event_JtextfielcorreoFocusLost
+    private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
+        char c = evt.getKeyChar();
+        if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE /*&& c != '.'*/) {
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Solo se permiten números", "Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_txtTelefonoKeyTyped
+
+    private void txtCorreoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCorreoFocusLost
+        String correo = txtCorreo.getText().trim();
+        // Regex para validar formato básico de correo (ej: usuario@dominio.com)
+        if (!correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            JOptionPane.showMessageDialog(null, "Correo inválido. Ejemplo válido: usuario@dominio.com", "Error", JOptionPane.ERROR_MESSAGE);
+            txtCorreo.requestFocus(); // Regresa el foco al campo
+        }
+    }//GEN-LAST:event_txtCorreoFocusLost
 
     private void jTextField8KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField8KeyTyped
-       char c = evt.getKeyChar();
-    
-    if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
-        evt.consume();
-        JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
-    }
+        char c = evt.getKeyChar();
+
+        if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jTextField8KeyTyped
 
     private void jTextField9KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField9KeyTyped
         char c = evt.getKeyChar();
-    
-    if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
-        evt.consume();
-        JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
-    }
+
+        if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jTextField9KeyTyped
 
     private void Jtextfield_correo_recepFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_Jtextfield_correo_recepFocusLost
-             String correo = Jtextfield_correo_recep.getText().trim();
-    // Regex para validar formato básico de correo (ej: usuario@dominio.com)
-    if (!correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-        JOptionPane.showMessageDialog(null, "Correo inválido. Ejemplo válido: usuario@dominio.com", "Error", JOptionPane.ERROR_MESSAGE);
-        Jtextfield_correo_recep.requestFocus(); // Regresa el foco al campo
-    }
+        String correo = Jtextfield_correo_recep.getText().trim();
+        // Regex para validar formato básico de correo (ej: usuario@dominio.com)
+        if (!correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            JOptionPane.showMessageDialog(null, "Correo inválido. Ejemplo válido: usuario@dominio.com", "Error", JOptionPane.ERROR_MESSAGE);
+            Jtextfield_correo_recep.requestFocus(); // Regresa el foco al campo
+        }
     }//GEN-LAST:event_Jtextfield_correo_recepFocusLost
 
     private void jTextField11KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField11KeyTyped
         char c = evt.getKeyChar();
         if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE /*&& c != '.'*/) {
-            evt.consume(); 
+            evt.consume();
             JOptionPane.showMessageDialog(null, "Solo se permiten números", "Error", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jTextField11KeyTyped
@@ -944,10 +1061,19 @@ public class admin extends javax.swing.JFrame {
     private void jTextField12KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField12KeyTyped
         char c = evt.getKeyChar();
         if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE /*&& c != '.'*/) {
-            evt.consume(); 
+            evt.consume();
             JOptionPane.showMessageDialog(null, "Solo se permiten números", "Error", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jTextField12KeyTyped
+
+    private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
+        guardarMedicoDesdeFormulario();
+        cargarDatosEnTabla();
+    }//GEN-LAST:event_jPanel5MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        cargarDatosEnTabla();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -979,6 +1105,7 @@ public class admin extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+
                 new admin().setVisible(true);
             }
         });
@@ -986,7 +1113,6 @@ public class admin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Btn_salir;
-    private javax.swing.JTextField Jtextfielcorreo;
     private javax.swing.JTextField Jtextfield_correo_recep;
     private javax.swing.JPanel Panel_doctor;
     private javax.swing.JPanel Panel_inicio;
@@ -994,6 +1120,8 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JPanel Panel_salas;
     private javax.swing.JTabbedPane Paneles_jtablepane;
     private javax.swing.JComboBox<String> Tipos_salas_Combobox;
+    private javax.swing.JTextField cbEspecialidad;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1083,17 +1211,17 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField13;
     private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
+    private javax.swing.JTextField txtApellidos;
+    private javax.swing.JTextField txtCedula;
+    private javax.swing.JTextField txtCorreo;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }
