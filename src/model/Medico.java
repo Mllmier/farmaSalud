@@ -4,6 +4,7 @@
  */
 package model;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
@@ -12,68 +13,69 @@ import java.util.List;
  */
 public class Medico {
 
-    private String codigoEmpleado;
-    private Paciente paciente;
-    private List<Paciente> pacientesAtendidos;
-    private List<Cita> listCitas;
+    @SerializedName("name")
+    private String nombre;
+    private String apellido;
+    private String correo;
+    private String cedula;
+    private String telefono;
+    private String especialidad;
 
-    private Especialidad especialidad;
-
-    enum Especialidad {
-        ODONTOLOGO,
-        GENERAL,
-        OFTAMOLOGIA,
-        PSIQUIATRIA,
-        CARDIOLOGO
-
-    }
-
-    public Medico(String codigoEmpleado, Persona persona, List<Paciente> pacientesAtendidos, Especialidad especialidad, Paciente paciente, List<Cita>citas) {
-        this.codigoEmpleado = codigoEmpleado;
-        this.pacientesAtendidos = pacientesAtendidos;
+    public Medico(String nombre, String apellido, String correo, String cedula, String telefono, String especialidad) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.correo = correo;
+        this.cedula = cedula;
+        this.telefono = telefono;
         this.especialidad = especialidad;
     }
 
-    public String getCodigoEmpleado() {
-        return codigoEmpleado;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setCodigoEmpleado(String codigoEmpleado) {
-        this.codigoEmpleado = codigoEmpleado;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public List<Paciente> getPacientesAtendidos() {
-        return pacientesAtendidos;
+    public String getApellido() {
+        return apellido;
     }
 
-    public void setPacientesAtendidos(List<Paciente> pacientesAtendidos) {
-        this.pacientesAtendidos = pacientesAtendidos;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
-    public Especialidad getEspecialidad() {
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getCedula() {
+        return cedula;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getEspecialidad() {
         return especialidad;
     }
 
-    public void setEspecialidad(Especialidad especialidad) {
+    public void setEspecialidad(String especialidad) {
         this.especialidad = especialidad;
     }
-
-    public Paciente getPaciente() {
-        return paciente;
-    }
-
-    public void setPaciente(Paciente paciente) {
-        this.paciente = paciente;
-    }
-
-    public List<Cita> getListCitas() {
-        return listCitas;
-    }
-
-    public void setListCitas(List<Cita> listCitas) {
-        this.listCitas = listCitas;
-    }
-    
-    
 
 }

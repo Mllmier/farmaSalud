@@ -4,17 +4,15 @@
  */
 package model;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author Maria liz
  */
-public class Reclamo {
-    private OrdenMedica ordenMedica;
-     
-    private Date fechaReclamo;
-    private Medico medico;
-    private Paciente paciente;
-    private String descripcion;
+public class ReciboEntrega {
+    private Recepcionista recepcionista;
+    private OrdenMedica ordenmedica;
+    private List<Medicamento>Medicamento;    
+    
 }

@@ -9,11 +9,10 @@ public class HistoriaMedica {
     private String observaciones;
     private Date fechaCreacion;
     private Paciente paciente;
-    //private Doctor doctor;
-
-    public HistoriaMedica(Paciente paciente) {
+    private Medico medico;
+    public HistoriaMedica(Paciente paciente,Medico medico) {
         this.paciente = paciente;
-        //this.doctor = doctor;
+        this.medico = medico;
         this.fechaCreacion = new Date();
     }
 
