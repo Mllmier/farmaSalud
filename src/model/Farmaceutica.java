@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-<<<<<<< HEAD
 import java.util.*;
 /**
  *
@@ -40,13 +39,5 @@ public class Farmaceutica extends Persona {
     
    
     
-=======
-
-/**
- *
- * @author Maria liz
- */
-public class Farmaceutica {
->>>>>>> 2d9849ed3f50375020f23f730f12c4b6260d20c9
     
 }

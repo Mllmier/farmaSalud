@@ -1,6 +1,5 @@
 package dao;
 
-<<<<<<< HEAD
 import model.Rol;
 import model.usuario;
 =======
@@ -12,14 +11,12 @@ import model.Recepcionista;
 
 import model.Rol;
 import model.Usuario;
->>>>>>> 2d9849ed3f50375020f23f730f12c4b6260d20c9
 
 /**
  *
  * @author Maria liz
  */
-<<<<<<< HEAD
-public class usuarioDAO {
+zzzzzzpublic class usuarioDAO {
     
     //admin creado con email y password
    private static final usuario usuario_predeterminado = new usuario("maria@gmail.com ", "karen123", rol.ADMINISTRADOR);
