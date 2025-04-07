@@ -168,7 +168,7 @@ public class admin extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("INICIO");
-        Panel_inicio.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 60, 41));
+        Panel_inicio.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 60, 41));
 
         jPanel2.add(Panel_inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 320, 100));
 
@@ -190,7 +190,7 @@ public class admin extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("GESTION DOCTORES");
-        Panel_doctor.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 187, 41));
+        Panel_doctor.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 30, 187, 41));
 
         jPanel2.add(Panel_doctor, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 320, 100));
 
@@ -212,7 +212,7 @@ public class admin extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("GESTION RECEPCIONISTAS");
-        Panel_recepcionistas.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 30, 240, 41));
+        Panel_recepcionistas.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 240, 41));
 
         jPanel2.add(Panel_recepcionistas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 450, 320, 100));
 
@@ -234,13 +234,16 @@ public class admin extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("GESTION SALAS");
-        Panel_salas.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, 156, 41));
+        Panel_salas.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 30, 156, 41));
 
         jPanel2.add(Panel_salas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 550, 320, 100));
 
         Btn_salir.setBackground(new java.awt.Color(10, 92, 184));
         Btn_salir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Btn_salir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Btn_salirMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 Btn_salirMouseEntered(evt);
             }
@@ -253,7 +256,7 @@ public class admin extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("SALIR");
-        Btn_salir.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 30, 70, 41));
+        Btn_salir.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, 70, 41));
 
         jPanel2.add(Btn_salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 650, 320, 100));
 
@@ -949,6 +952,20 @@ public class admin extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Solo se permiten números", "Error", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jTextField12KeyTyped
+
+    private void Btn_salirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Btn_salirMouseClicked
+        int respuesta = JOptionPane.showConfirmDialog(
+        this, 
+        "¿Está seguro que desea cerrar la aplicación?",
+        "Confirmar cierre",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.QUESTION_MESSAGE);
+    
+    if (respuesta == JOptionPane.YES_OPTION) {
+        System.exit(0);
+        
+    }
+    }//GEN-LAST:event_Btn_salirMouseClicked
 
     /**
      * @param args the command line arguments
