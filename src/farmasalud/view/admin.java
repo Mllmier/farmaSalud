@@ -38,8 +38,8 @@ public class admin extends javax.swing.JFrame {
 
     }
 
-    private void setupTableModel() {
-        tableModel = (DefaultTableModel) jTable1.getModel();
+     private void setupTableModel() {
+        tableModel = (DefaultTableModel) TablaDoctores.getModel();
     }
 
     private void guardarMedicoDesdeFormulario() {
@@ -126,6 +126,32 @@ public class admin extends javax.swing.JFrame {
             tableModel.addRow(row);
         }
     }
+    private void eliminarDoctorSeleccionado() {
+    int filaSeleccionada = TablaDoctores.getSelectedRow();
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, "Seleccione un médico de la tabla.", "Error", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    String numeroDocumento = (String) tableModel.getValueAt(filaSeleccionada, 3); // Asumiendo que columna 3 = numeroDocumento
+    
+    int confirmacion = JOptionPane.showConfirmDialog(
+        this, 
+        "¿Eliminar al médico con documento " + numeroDocumento + "?",
+        "Confirmar",
+        JOptionPane.YES_NO_OPTION
+    );
+    
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        boolean eliminado = medicoDAO.eliminarMedico(numeroDocumento);
+        if (eliminado) {
+            JOptionPane.showMessageDialog(this, "Médico eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            cargarDatosEnTabla(); // Actualizar tabla
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontró el médico.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
 
     /*
     private void limpiarFormulario() {
@@ -144,7 +170,7 @@ public class admin extends javax.swing.JFrame {
                 return false;
             }
         };
-        jTable1.setModel(tableModel);
+        TablaDoctores.setModel(tableModel);
     }
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {
@@ -215,7 +241,7 @@ public class admin extends javax.swing.JFrame {
         jLabel42 = new javax.swing.JLabel();
         txtFechaNacimiento = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaDoctores = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
@@ -569,6 +595,11 @@ public class admin extends javax.swing.JFrame {
         jPanel4.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, 350, 60));
 
         jPanel9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel9MouseClicked(evt);
+            }
+        });
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
@@ -609,8 +640,8 @@ public class admin extends javax.swing.JFrame {
 
         jPanel10.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 393, 630));
 
-        jTable1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDoctores.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+        TablaDoctores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null},
@@ -621,7 +652,7 @@ public class admin extends javax.swing.JFrame {
                 "NOMBRE", "APELLIDO", "CORREO", "CEDULA", "TELEFONO", "ESPECIALIDAD", "FECHA NACIMIENTO", "SEXO", "EPS"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(TablaDoctores);
 
         jPanel10.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 570, 630));
 
@@ -1156,6 +1187,10 @@ public class admin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFechaNacimientoActionPerformed
 
+    private void jPanel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel9MouseClicked
+         eliminarDoctorSeleccionado();
+    }//GEN-LAST:event_jPanel9MouseClicked
+
 
     /**
      * @param args the command line arguments
@@ -1201,6 +1236,7 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JPanel Panel_recepcionistas;
     private javax.swing.JPanel Panel_salas;
     private javax.swing.JTabbedPane Paneles_jtablepane;
+    private javax.swing.JTable TablaDoctores;
     private javax.swing.JComboBox<String> Tipos_salas_Combobox;
     private javax.swing.JComboBox<String> cbEpss;
     private javax.swing.JTextField cbEspecialidad;
@@ -1294,7 +1330,6 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
