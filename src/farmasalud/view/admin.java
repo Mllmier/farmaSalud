@@ -1069,7 +1069,7 @@ public class admin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextField12KeyTyped
 
-<<<<<<< HEAD
+
     private void Btn_salirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Btn_salirMouseClicked
         int respuesta = JOptionPane.showConfirmDialog(
         this, 
@@ -1083,7 +1083,7 @@ public class admin extends javax.swing.JFrame {
         
     }
     }//GEN-LAST:event_Btn_salirMouseClicked
-=======
+
     private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
         guardarMedicoDesdeFormulario();
         cargarDatosEnTabla();
@@ -1092,7 +1092,7 @@ public class admin extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         cargarDatosEnTabla();
     }//GEN-LAST:event_jButton1ActionPerformed
->>>>>>> 2d9849ed3f50375020f23f730f12c4b6260d20c9
+
 
     /**
      * @param args the command line arguments
