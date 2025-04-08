@@ -1,6 +1,8 @@
 package model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Paciente extends Persona {
@@ -9,18 +11,12 @@ public class Paciente extends Persona {
     private List<Cita> citas;
     private List<HistoriaMedica> historialMedico;
 
-    public Paciente(String numeroDocumento, String nombres, String apellidos) {
-        super(numeroDocumento, nombres, apellidos);
-        this.citas = new ArrayList<>();
-        this.historialMedico = new ArrayList<>();
-    }
-
-    public void agregarCita(Cita cita) {
-        this.citas.add(cita);
-    }
-
-    public void agregarHistoriaMedica(HistoriaMedica historia) {
-        this.historialMedico.add(historia);
+    public Paciente(String tipoSangre, String alergias, List<Cita> citas, List<HistoriaMedica> historialMedico, String numeroDocumento, String nombres, String apellidos, LocalDate fechaNacimiento, String sexo, String eps, String email, String celular) {
+        super(numeroDocumento, nombres, apellidos, fechaNacimiento, sexo, eps, email, celular);
+        this.tipoSangre = tipoSangre;
+        this.alergias = alergias;
+        this.citas = citas;
+        this.historialMedico = historialMedico;
     }
 
     public String getTipoSangre() {
