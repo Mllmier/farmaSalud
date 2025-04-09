@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
+import java.time.LocalDate;
 import java.util.*;
 /**
  *
@@ -13,11 +14,11 @@ public class Farmaceutica extends Persona {
      private List<Medicamento>medicamentosEntregados;
 
     
-    public Farmaceutica(String numeroDocumento, String nombres, String apellidos) {
-        super(numeroDocumento, nombres, apellidos);
-        this.medicamentosDisponibles=new ArrayList<>();
-        this.medicamentosEntregados=new ArrayList<>();
-    }
+   public Farmaceutica(String numeroDocumento, String nombres, String apellidos,LocalDate fechaNacimiento,String sexo,String eps,String email,String celular){
+   super(numeroDocumento, nombres, apellidos, fechaNacimiento, sexo, eps, email, celular);
+   this.medicamentosDisponibles=new ArrayList<>();
+   this.medicamentosEntregados= new ArrayList<>();
+   }
 
     
     

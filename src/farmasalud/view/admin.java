@@ -7,11 +7,17 @@ package farmasalud.view;
 import dao.MedicoDAO;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import static java.time.temporal.TemporalQueries.localDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import model.Medico;
 
@@ -23,6 +29,7 @@ public class admin extends javax.swing.JFrame {
 
     private DefaultTableModel tableModel;
     private MedicoDAO medicoDAO = new MedicoDAO();
+     private String cedulaOriginal;
 
     /**
      * Creates new form admin
@@ -31,44 +38,77 @@ public class admin extends javax.swing.JFrame {
         initComponents();
         setupTableModel();
         cargarDatosEnTabla();
+        
+         TablaDoctores.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if (!e.getValueIsAdjusting()) {
+                cargarDoctorEnFormulario();
+            }
+        }
 
+    });
     }
+    
 
-    private void setupTableModel() {
-        tableModel = (DefaultTableModel) jTable1.getModel();
+     private void setupTableModel() {
+        tableModel = (DefaultTableModel) TablaDoctores.getModel();
     }
 
     private void guardarMedicoDesdeFormulario() {
+       try {
+        String nombres = txtNombre.getText().trim();
+        String apellidos = txtApellidos.getText().trim();
+        String correo = txtCorreo.getText().trim();
+        String cedula = txtCedula.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String especialidad = cbEspecialidad.getSelectedItem().toString();
+        String sexo = cbSexo2.getSelectedItem().toString();
+        String eps = cbEpss.getSelectedItem().toString();
+        String fechaStr = txtFechaNacimiento.getText().trim();
+
+        if (nombres.isEmpty() || apellidos.isEmpty() || correo.isEmpty()
+                || cedula.isEmpty() || telefono.isEmpty() || especialidad.isEmpty() || fechaStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Todos los campos son obligatorios",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        LocalDate fechaNacimiento;
         try {
-            String nombre = txtNombre.getText().trim();
-            String apellidos = txtApellidos.getText().trim();
-            String correo = txtCorreo.getText().trim();
-            String cedula = txtCedula.getText().trim();
-            String telefono = txtTelefono.getText().trim();
-            String especialidad = cbEspecialidad.getText().toString();
-
-            if (nombre.isEmpty() || apellidos.isEmpty() || correo.isEmpty()
-                    || cedula.isEmpty() || telefono.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "Todos los campos son obligatorios",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            Medico nuevoMedico = new Medico(nombre, apellidos, correo, cedula, telefono, especialidad);
-
+            fechaNacimiento = LocalDate.parse(fechaStr);
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Formato de fecha inválido. Usa YYYY-MM-DD",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+            Medico nuevoMedico = new Medico(
+                    
+            
+                    nombres,
+                    apellidos,
+                    correo,
+                    cedula,
+                    telefono,
+                    especialidad,
+                    fechaNacimiento,
+                    sexo,
+                    eps
+            );
+            nuevoMedico.setFechaNacimiento(LocalDate.now());
             medicoDAO.guardarMedico(nuevoMedico);
 
             JOptionPane.showMessageDialog(this,
-                    "Médico guardado exitosamente:\n"
-                    + "Nombre: " + nombre + " " + apellidos + "\n"
-                    + "Especialidad: " + especialidad,
+                    "Médico guardado exitosamente",
                     "Éxito",
                     JOptionPane.INFORMATION_MESSAGE);
 
-            // 6. Limpiar campos
-            limpiarFormulario();
+            //limpiarFormulario();
+            cargarDatosEnTabla();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
@@ -76,55 +116,194 @@ public class admin extends javax.swing.JFrame {
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+
     }
 
+    private void cargarDatosEnTabla() {
+        tableModel.setRowCount(0);
+        List<Medico> medicos = medicoDAO.cargarTodos();
+
+        for (Medico medico : medicos) {
+            Object[] row = {
+                medico.getNombres(),
+                medico.getApellidos(),
+                medico.getEmail(),
+                medico.getNumeroDocumento(),
+                medico.getCelular(),
+                medico.getEspecialidad(),
+                medico.getFechaNacimiento(),
+                medico.getSexo(),
+                medico.getEps()
+
+            };
+            tableModel.addRow(row);
+        }
+    }
+    private void eliminarDoctorSeleccionado() {
+    int filaSeleccionada = TablaDoctores.getSelectedRow();
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, "Seleccione un médico de la tabla.", "Error", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    String numeroDocumento = (String) tableModel.getValueAt(filaSeleccionada, 3); // Asumiendo que columna 3 = numeroDocumento
+    
+    int confirmacion = JOptionPane.showConfirmDialog(
+        this, 
+        "¿Eliminar al médico con documento " + numeroDocumento + "?",
+        "Confirmar",
+        JOptionPane.YES_NO_OPTION
+    );
+    
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        boolean eliminado = medicoDAO.eliminarMedico(numeroDocumento);
+        if (eliminado) {
+            JOptionPane.showMessageDialog(this, "Médico eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            cargarDatosEnTabla(); // Actualizar tabla
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontró el médico.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
+    private void cargarDoctorEnFormulario() {
+    int filaSeleccionada = TablaDoctores.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        return; // No hay fila seleccionada
+    }
+    
+    try {
+        // Obtener los datos de la fila seleccionada
+        String nombres = tableModel.getValueAt(filaSeleccionada, 0).toString();
+        String apellidos = tableModel.getValueAt(filaSeleccionada, 1).toString();
+        String correo = tableModel.getValueAt(filaSeleccionada, 2).toString();
+        String cedula = tableModel.getValueAt(filaSeleccionada, 3).toString();
+        String telefono = tableModel.getValueAt(filaSeleccionada, 4).toString();
+        String especialidad = tableModel.getValueAt(filaSeleccionada, 5).toString();
+        
+        // Manejar la fecha (puede ser LocalDate o String)
+        Object fechaObj = tableModel.getValueAt(filaSeleccionada, 6);
+        String fechaStr = (fechaObj instanceof LocalDate) ? 
+                         ((LocalDate)fechaObj).toString() : 
+                         fechaObj.toString();
+        
+        String sexo = tableModel.getValueAt(filaSeleccionada, 7).toString();
+        String eps = tableModel.getValueAt(filaSeleccionada, 8).toString();
+        
+        // Cargar datos en los campos del formulario
+        txtNombre.setText(nombres);
+        txtApellidos.setText(apellidos);
+        txtCorreo.setText(correo);
+        txtCedula.setText(cedula);
+        txtTelefono.setText(telefono);
+        cbEspecialidad.setSelectedItem(especialidad);
+        txtFechaNacimiento.setText(fechaStr);
+        cbSexo2.setSelectedItem(sexo);
+        cbEpss.setSelectedItem(eps);
+        
+        // Guardar la cédula original para referencia al modificar
+        this.cedulaOriginal = cedula;
+        
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this,
+            "Error al cargar datos del doctor: " + ex.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
+    private void actualizarDoctor() {
+    try {
+        // Obtener los datos modificados del formulario
+        String nombres = txtNombre.getText().trim();
+        String apellidos = txtApellidos.getText().trim();
+        String correo = txtCorreo.getText().trim();
+        String cedula = txtCedula.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String especialidad = cbEspecialidad.getSelectedItem().toString();
+        String sexo = cbSexo2.getSelectedItem().toString();
+        String eps = cbEpss.getSelectedItem().toString();
+        LocalDate fechaNacimiento = LocalDate.parse(txtFechaNacimiento.getText().trim());
+
+        // Validar campos obligatorios
+        if (nombres.isEmpty() || apellidos.isEmpty() || correo.isEmpty() || 
+            cedula.isEmpty() || telefono.isEmpty() || especialidad.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Todos los campos son obligatorios",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Crear el objeto médico actualizado
+        Medico medicoActualizado = new Medico(
+            nombres, apellidos, correo, cedula, telefono, 
+            especialidad, fechaNacimiento, sexo, eps
+        );
+
+        // Actualizar en el DAO
+        boolean actualizado = medicoDAO.actualizarMedico(cedulaOriginal, medicoActualizado);
+        
+        if (actualizado) {
+            JOptionPane.showMessageDialog(this,
+                "Doctor actualizado exitosamente",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            // Actualizar la tabla
+            cargarDatosEnTabla();
+            
+            // Limpiar el formulario
+            limpiarFormulario();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                "No se pudo actualizar el doctor",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+            "Error al actualizar doctor: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
+
+    
     private void limpiarFormulario() {
         txtNombre.setText("");
         txtApellidos.setText("");
         txtCorreo.setText("");
         txtCedula.setText("");
         txtTelefono.setText("");
-        cbEspecialidad.setText("");
+        cbEspecialidad.setSelectedItem("");
     }
-
     private void initTableModel() {
         tableModel = new DefaultTableModel(
-            new Object[]{"Nombre", "Apellidos", "Correo", "Cédula", "Teléfono", "Especialidad"}, 0) {
+                new Object[]{"Nombre", "Apellidos", "Correo", "Cédula", "Teléfono", "Especialidad", "Fecha Nacimiento", "Sexo", "Eps"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-        };
-        jTable1.setModel(tableModel); 
-    }
-    
-    private void cargarDatosEnTabla() {
-        tableModel.setRowCount(0);
-        
-        List<Medico> medicos = medicoDAO.cargarTodos();
-        
-        for (Medico medico : medicos) {
-            Object[] row = {
-                medico.getNombre(),
-                medico.getApellido(),
-                medico.getCorreo(),
-                medico.getCedula(),
-                medico.getTelefono(),
-                medico.getEspecialidad()
-            };
-            tableModel.addRow(row);
+             @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            // Especifica el tipo de dato para cada columna
+            if (columnIndex == 6) return LocalDate.class; // Columna de fecha
+            return String.class; // Todas las demás son String
         }
-    }
     
-    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        cargarDatosEnTabla();
-        JOptionPane.showMessageDialog(this, 
-            "Tabla actualizada correctamente", 
-            "Actualización", 
-            JOptionPane.INFORMATION_MESSAGE);
+        };
+        TablaDoctores.setModel(tableModel);
     }
 
-    
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {
+        cargarDatosEnTabla();
+        JOptionPane.showMessageDialog(this,
+                "Tabla actualizada correctamente",
+                "Actualización",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -162,9 +341,7 @@ public class admin extends javax.swing.JFrame {
         txtCedula = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        cbEspecialidad = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
@@ -178,8 +355,15 @@ public class admin extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        cbEpss = new javax.swing.JComboBox<>();
+        jLabel41 = new javax.swing.JLabel();
+        cbSexo = new javax.swing.JLabel();
+        cbSexo2 = new javax.swing.JComboBox<>();
+        jLabel42 = new javax.swing.JLabel();
+        txtFechaNacimiento = new javax.swing.JTextField();
+        cbEspecialidad = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaDoctores = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
@@ -271,7 +455,7 @@ public class admin extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("INICIO");
-        Panel_inicio.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 60, 41));
+        Panel_inicio.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 60, 41));
 
         jPanel2.add(Panel_inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 320, 100));
 
@@ -293,7 +477,7 @@ public class admin extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("GESTION DOCTORES");
-        Panel_doctor.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 187, 41));
+        Panel_doctor.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 30, 187, 41));
 
         jPanel2.add(Panel_doctor, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 320, 100));
 
@@ -315,7 +499,7 @@ public class admin extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("GESTION RECEPCIONISTAS");
-        Panel_recepcionistas.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 30, 240, 41));
+        Panel_recepcionistas.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 240, 41));
 
         jPanel2.add(Panel_recepcionistas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 450, 320, 100));
 
@@ -337,13 +521,16 @@ public class admin extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("GESTION SALAS");
-        Panel_salas.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, 156, 41));
+        Panel_salas.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 30, 156, 41));
 
         jPanel2.add(Panel_salas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 550, 320, 100));
 
         Btn_salir.setBackground(new java.awt.Color(10, 92, 184));
         Btn_salir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Btn_salir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Btn_salirMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 Btn_salirMouseEntered(evt);
             }
@@ -356,7 +543,7 @@ public class admin extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("SALIR");
-        Btn_salir.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 30, 70, 41));
+        Btn_salir.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, 70, 41));
 
         jPanel2.add(Btn_salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 650, 320, 100));
 
@@ -467,21 +654,8 @@ public class admin extends javax.swing.JFrame {
         jLabel11.setText("TELEFONO :");
         jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 70, 30));
 
-        cbEspecialidad.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        cbEspecialidad.setBorder(null);
-        cbEspecialidad.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                cbEspecialidadKeyTyped(evt);
-            }
-        });
-        jPanel4.add(cbEspecialidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 250, 20));
-
         jLabel12.setText("ESPECIALIDAD :");
         jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, 90, 30));
-
-        jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
-        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel4.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 250, 250, 10));
 
         jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
@@ -518,6 +692,11 @@ public class admin extends javax.swing.JFrame {
         jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 340, 350, 60));
 
         jPanel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel6MouseClicked(evt);
+            }
+        });
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -530,6 +709,11 @@ public class admin extends javax.swing.JFrame {
         jPanel4.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, 350, 60));
 
         jPanel9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel9MouseClicked(evt);
+            }
+        });
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
@@ -538,29 +722,54 @@ public class admin extends javax.swing.JFrame {
 
         jPanel4.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 500, 350, 60));
 
-        jButton1.setText("jButton1");
+        jButton1.setText("ACTUALIZAR TABLA");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 570, -1, -1));
+        jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 580, -1, -1));
+
+        cbEpss.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel4.add(cbEpss, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 300, -1, -1));
+
+        jLabel41.setText("Eps");
+        jPanel4.add(jLabel41, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 40, -1));
+
+        cbSexo.setText("Sexo");
+        jPanel4.add(cbSexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 300, 50, -1));
+
+        cbSexo2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M", "F" }));
+        jPanel4.add(cbSexo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 300, -1, -1));
+
+        jLabel42.setText("Fecha Nacimiento");
+        jPanel4.add(jLabel42, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 120, -1));
+
+        txtFechaNacimiento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFechaNacimientoActionPerformed(evt);
+            }
+        });
+        jPanel4.add(txtFechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 270, 230, -1));
+
+        cbEspecialidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Seleccione  la especialidad del doctor>", "Medico general", "Cardilogo", "terapeusta", " ", " " }));
+        jPanel4.add(cbEspecialidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 260, -1));
 
         jPanel10.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 393, 630));
 
-        jTable1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDoctores.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+        TablaDoctores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "NOMBRE", "APELLIDO", "CORREO", "CEDULA", "TELEFONO", "ESPECIALIDAD"
+                "NOMBRE", "APELLIDO", "CORREO", "CEDULA", "TELEFONO", "ESPECIALIDAD", "FECHA NACIMIENTO", "SEXO", "EPS"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(TablaDoctores);
 
         jPanel10.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 570, 630));
 
@@ -990,14 +1199,6 @@ public class admin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtApellidosKeyTyped
 
-    private void cbEspecialidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbEspecialidadKeyTyped
-        char c = evt.getKeyChar();
-        if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
-            evt.consume();
-            JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_cbEspecialidadKeyTyped
-
     private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
         char c = evt.getKeyChar();
         if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE /*&& c != '.'*/) {
@@ -1066,6 +1267,21 @@ public class admin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextField12KeyTyped
 
+
+    private void Btn_salirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Btn_salirMouseClicked
+        int respuesta = JOptionPane.showConfirmDialog(
+        this, 
+        "¿Está seguro que desea cerrar la aplicación?",
+        "Confirmar cierre",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.QUESTION_MESSAGE);
+    
+    if (respuesta == JOptionPane.YES_OPTION) {
+        System.exit(0);
+        
+    }
+    }//GEN-LAST:event_Btn_salirMouseClicked
+
     private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
         guardarMedicoDesdeFormulario();
         cargarDatosEnTabla();
@@ -1074,6 +1290,25 @@ public class admin extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         cargarDatosEnTabla();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+
+    private void txtFechaNacimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaNacimientoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFechaNacimientoActionPerformed
+
+    private void jPanel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel9MouseClicked
+         eliminarDoctorSeleccionado();
+    }//GEN-LAST:event_jPanel9MouseClicked
+
+    private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
+        if (TablaDoctores.getSelectedRow() == -1) {
+            cargarDoctorEnFormulario();
+        } else {
+            actualizarDoctor();
+        }
+    
+    }//GEN-LAST:event_jPanel6MouseClicked
+
 
     /**
      * @param args the command line arguments
@@ -1119,8 +1354,12 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JPanel Panel_recepcionistas;
     private javax.swing.JPanel Panel_salas;
     private javax.swing.JTabbedPane Paneles_jtablepane;
+    private javax.swing.JTable TablaDoctores;
     private javax.swing.JComboBox<String> Tipos_salas_Combobox;
-    private javax.swing.JTextField cbEspecialidad;
+    private javax.swing.JComboBox<String> cbEpss;
+    private javax.swing.JComboBox<String> cbEspecialidad;
+    private javax.swing.JLabel cbSexo;
+    private javax.swing.JComboBox<String> cbSexo2;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1157,6 +1396,8 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
+    private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1193,7 +1434,6 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
     private javax.swing.JSeparator jSeparator12;
@@ -1207,7 +1447,6 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
@@ -1221,6 +1460,7 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JTextField txtApellidos;
     private javax.swing.JTextField txtCedula;
     private javax.swing.JTextField txtCorreo;
+    private javax.swing.JTextField txtFechaNacimiento;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
