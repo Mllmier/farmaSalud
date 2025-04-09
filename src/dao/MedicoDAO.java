@@ -81,6 +81,26 @@ public class MedicoDAO {
         
         
 }
+   
+   public boolean actualizarMedico(String cedulaOriginal, Medico medicoActualizado) {
+    try {
+        List<Medico> medicos = cargarTodos();
+        
+        // Buscar el médico a actualizar
+        for (int i = 0; i < medicos.size(); i++) {
+            if (medicos.get(i).getNumeroDocumento().equals(cedulaOriginal)) {
+                // Reemplazar con los nuevos datos
+                medicos.set(i, medicoActualizado);
+                guardarTodos(medicos);
+                return true;
+            }
+        }
+        return false;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 
 public class LocalDateAdapter extends TypeAdapter<LocalDate>{
         private final DateTimeFormatter formatter=DateTimeFormatter.ISO_LOCAL_DATE;
