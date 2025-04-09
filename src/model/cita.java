@@ -1,5 +1,6 @@
 package model;
 
+import farmasalud.view.Paciente;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
