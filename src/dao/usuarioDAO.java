@@ -1,8 +1,8 @@
 package dao;
 
 import model.Rol;
-import model.usuario;
-=======
+import model.Usuario;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -15,18 +15,12 @@ import model.Usuario;
 /**
  *
  * @author Maria liz
- */
-zzzzzzpublic class usuarioDAO {
+ */public class UsuarioDAO {
     
     //admin creado con email y password
-   private static final usuario usuario_predeterminado = new usuario("maria@gmail.com ", "karen123", rol.ADMINISTRADOR);
-    
-    public usuario validarCredenciales(String email, String password) {
-        return usuario_predeterminado;
-=======
-public class UsuarioDAO {
-
-    private static final String JSON_FILE = "C:\\Users\\Maria liz\\Desktop\\farmaSalud\\src\\resources\\data\\usuarios.json";
+  
+ 
+    private static final String JSON_FILE = "C:\\Users\\HP\\Desktop\\farmaSalud\\src\\resources\\data\\usuarios.json";
 
     public Usuario validarCredenciales(String email, String password) {
         try (FileReader reader = new FileReader(JSON_FILE)) {
@@ -58,6 +52,7 @@ public class UsuarioDAO {
     }
     public boolean esDoctor(Usuario doctor){
         return doctor !=null && doctor.getRole()==Rol.MEDICO;
->>>>>>> 2d9849ed3f50375020f23f730f12c4b6260d20c9
     }
 }
+
+ 

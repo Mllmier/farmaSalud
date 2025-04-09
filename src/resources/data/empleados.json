@@ -22,5 +22,13 @@
     "cedula": "1234432234",
     "telefono": "1002324435",
     "especialidad": "Medico General"
+  },
+  {
+    "name": "camilo",
+    "apellido": "XD",
+    "correo": "XD@gmail.com",
+    "cedula": "0987654321",
+    "telefono": "0987654321",
+    "especialidad": "mototaxista"
   }
 ]

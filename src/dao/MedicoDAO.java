@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedicoDAO {
-    private static final String ARCHIVO_JSON = "C:\\Users\\Maria liz\\Desktop\\farmaSalud\\src\\resources\\data\\empleados.json";
+    private static final String ARCHIVO_JSON = "C:\\Users\\HP\\Desktop\\farmaSalud\\src\\resources\\data\\empleados.json";
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
     
     public List<Medico> cargarTodos() {
