@@ -18,7 +18,7 @@ import model.Usuario;
  */
 public class usuarioDAO {
 
-    private static final String JSON_FILE = "C:\\Users\\usuario\\Downloads\\farmaSalud\\src\\resources\\data\\usuarios.json";
+    private static final String JSON_FILE = "C:\\Users\\HP\\Desktop\\farmaSalud\\src\\resources\\data\\usuarios.json";
 
     public Usuario validarCredenciales(String email, String password) {
         try (FileReader reader = new FileReader(JSON_FILE)) {
