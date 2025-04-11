@@ -10,42 +10,14 @@
     "celular": ""
   },
   {
-    "especialidad": "malandro",
-    "numeroDocumento": "1234567890",
-    "nombres": "chamaco",
-    "apellidos": "chamcotutler",
-    "eps": "Item 4",
-    "email": "beibieiebib@gmail.com",
-    "celular": "123456789"
-  },
-  {
-    "especialidad": "medico general",
-    "numeroDocumento": "8521479635",
-    "nombres": "sharlok",
-    "apellidos": "alcazar",
-    "eps": "Item 3",
-    "email": "sharky@gmail.com",
-    "celular": "664545454545"
-  },
-  {
-    "especialidad": "hhighhighhh",
-    "numeroDocumento": "234567890",
-    "nombres": "fghjklfgghhjhjhhg",
-    "apellidos": "werrtyuio",
-    "fechaNacimiento": "2025-04-08",
-    "eps": "Item 4",
-    "email": "errtyuio@gmail.com",
-    "celular": "23456789"
-  },
-  {
-    "especialidad": "vbdfvdjvdfvb",
-    "numeroDocumento": "234567890",
-    "nombres": "qwertyuio",
-    "apellidos": "sdfghjnjb",
-    "fechaNacimiento": "2025-04-08",
-    "sexo": "F",
-    "eps": "Item 3",
-    "email": "nhhibig@gmail.com",
-    "celular": "34567890"
+    "especialidad": "Cardilogo",
+    "numeroDocumento": "7894561234",
+    "nombres": "camilo el gay",
+    "apellidos": "tralalelo",
+    "fechaNacimiento": "2025-04-09",
+    "sexo": "M",
+    "eps": "Item 1",
+    "email": "camilo@gmail.com",
+    "celular": "30001164785"
   }
 ]
