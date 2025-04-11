@@ -551,6 +551,51 @@ public class admin extends javax.swing.JFrame {
         cbSexo2.setSelectedIndex(0);
         cbEpss.setSelectedIndex(0);
     }
+<<<<<<< HEAD
+=======
+    private void initTableModel() {
+        tableModel = new DefaultTableModel(
+                new Object[]{"Nombre", "Apellidos", "Correo", "Cédula", "Teléfono", "Especialidad", "Fecha Nacimiento", "Sexo", "Eps"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+             @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            // Especifica el tipo de dato para cada columna
+            if (columnIndex == 6) return LocalDate.class; // Columna de fecha
+            return String.class; // Todas las demás son String
+        }
+>>>>>>> 658021279baff396e01cde1801745e77b3820028
     
     //limpiar formulario recepcionista
     private void LimpiarRecepcionista(){
