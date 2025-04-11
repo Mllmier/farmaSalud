@@ -51,23 +51,18 @@ public class MedicoDAO {
     
    public boolean eliminarMedico(String numeroDocumento) {
     try {
-        // 1. Validar entrada
         if (numeroDocumento == null || numeroDocumento.trim().isEmpty()) {
             throw new IllegalArgumentException("Número de documento no puede ser nulo o vacío");
         }
 
-        // 2. Cargar médicos (manejar posible IOException)
         List<Medico> medicos = cargarTodos();
-        
-        // 3. Eliminar si existe
+
         boolean removed = medicos.removeIf(m -> 
             numeroDocumento.equals(m.getNumeroDocumento())
         );
         
-        // 4. Guardar solo si hubo cambios
         if (removed) {
             guardarTodos(medicos);
-            // Opcional: Registrar en log
             System.out.println("Médico con documento " + numeroDocumento + " eliminado.");
         }
         

@@ -5,21 +5,18 @@
 package farmasalud.view;
 
 import dao.MedicoDAO;
+import dao.RecepcionistaDAO;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import static java.time.temporal.TemporalQueries.localDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import model.Medico;
+import model.Recepcionista;
 
 /**
  *
@@ -28,67 +25,115 @@ import model.Medico;
 public class admin extends javax.swing.JFrame {
 
     private DefaultTableModel tableModel;
+    //tableModel para recepcionista
+    private DefaultTableModel tableModelRecepcionista = new DefaultTableModel();
     private MedicoDAO medicoDAO = new MedicoDAO();
-     private String cedulaOriginal;
+    private String cedulaOriginal;
+    private RecepcionistaDAO recepcionistaDAO = new RecepcionistaDAO();
 
     /**
      * Creates new form admin
      */
     public admin() {
         initComponents();
+        setupTableModelRecepcionista();
+        cargarDatosEnTablaRecepcionista();
         setupTableModel();
         cargarDatosEnTabla();
         
-         TablaDoctores.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-            if (!e.getValueIsAdjusting()) {
-                cargarDoctorEnFormulario();
+        
+        
+        
+        //doctores
+        TablaDoctores.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    cargarDoctorEnFormulario();
+                }
             }
-        }
+        });
+        
+        //recepcionista
+       TabladeRecepcionistas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    cargarRecepcionistaEnTabla();
+                }
+            }
+        });
+        
+    }
 
-    });
+    //tableModel de doctores
+    private void setupTableModel() {
+        tableModel = new DefaultTableModel(
+                new Object[]{"Nombre", "Apellidos", "Correo", "Cédula", "Teléfono", "Especialidad", "Fecha Nacimiento", "Sexo", "Eps"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 6) return LocalDate.class;
+                return String.class;
+            }
+        };
+        TablaDoctores.setModel(tableModel);
+    }
+    
+    //tableModel para recepcionista
+     private void setupTableModelRecepcionista() {
+        tableModelRecepcionista = new DefaultTableModel(
+                new Object[]{"Cedula","Nombre", "Apellidos", "Fecha Nacimiento" , "Sexo", "Eps","Correo", "Teléfono", "Codigo Empleado", "Fecha Contratacion","Turno"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 3|| columnIndex == 9) return LocalDate.class;
+                return String.class;
+            }
+        };
+        TabladeRecepcionistas.setModel(tableModelRecepcionista);
     }
     
 
-     private void setupTableModel() {
-        tableModel = (DefaultTableModel) TablaDoctores.getModel();
-    }
-
     private void guardarMedicoDesdeFormulario() {
-       try {
-        String nombres = txtNombre.getText().trim();
-        String apellidos = txtApellidos.getText().trim();
-        String correo = txtCorreo.getText().trim();
-        String cedula = txtCedula.getText().trim();
-        String telefono = txtTelefono.getText().trim();
-        String especialidad = cbEspecialidad.getSelectedItem().toString();
-        String sexo = cbSexo2.getSelectedItem().toString();
-        String eps = cbEpss.getSelectedItem().toString();
-        String fechaStr = txtFechaNacimiento.getText().trim();
-
-        if (nombres.isEmpty() || apellidos.isEmpty() || correo.isEmpty()
-                || cedula.isEmpty() || telefono.isEmpty() || especialidad.isEmpty() || fechaStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Todos los campos son obligatorios",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        LocalDate fechaNacimiento;
         try {
-            fechaNacimiento = LocalDate.parse(fechaStr);
-        } catch (DateTimeParseException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Formato de fecha inválido. Usa YYYY-MM-DD",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+            String nombres = txtNombre.getText().trim();
+            String apellidos = txtApellidos.getText().trim();
+            String correo = txtCorreo.getText().trim();
+            String cedula = txtCedula.getText().trim();
+            String telefono = txtTelefono.getText().trim();
+            String especialidad = cbEspecialidad.getSelectedItem().toString();
+            String sexo = cbSexo2.getSelectedItem().toString();
+            String eps = cbEpss.getSelectedItem().toString();
+            String fechaStr = txtFechaNacimiento.getText().trim();
+
+            if (nombres.isEmpty() || apellidos.isEmpty() || correo.isEmpty()
+                    || cedula.isEmpty() || telefono.isEmpty() || especialidad.isEmpty() || fechaStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Todos los campos son obligatorios",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            LocalDate fechaNacimiento;
+            try {
+                fechaNacimiento = LocalDate.parse(fechaStr);
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Formato de fecha inválido. Usa YYYY-MM-DD",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             Medico nuevoMedico = new Medico(
-                    
-            
                     nombres,
                     apellidos,
                     correo,
@@ -99,7 +144,6 @@ public class admin extends javax.swing.JFrame {
                     sexo,
                     eps
             );
-            nuevoMedico.setFechaNacimiento(LocalDate.now());
             medicoDAO.guardarMedico(nuevoMedico);
 
             JOptionPane.showMessageDialog(this,
@@ -107,7 +151,7 @@ public class admin extends javax.swing.JFrame {
                     "Éxito",
                     JOptionPane.INFORMATION_MESSAGE);
 
-            //limpiarFormulario();
+            limpiarFormulario();
             cargarDatosEnTabla();
 
         } catch (Exception e) {
@@ -116,8 +160,87 @@ public class admin extends javax.swing.JFrame {
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
-
     }
+    //Guardar recepcionista
+    
+    private void guardarRecepcionistaDesdeFormulario() {
+        try {
+            String cedula = jtextfielID_recep.getText().trim();
+            String nombres = Jtexfieldnombre_recep.getText().trim();
+            String apellidos = jtextfieldApellido_recep.getText().trim();
+            String fecha_nacimiento = Jtexfieldfechanacimiento_recep.getText().trim();
+            String sexo = JcomboSexo.getSelectedItem().toString();
+            String eps = JcomboSexo1.getSelectedItem().toString();
+            String correo = Jtextfield_correo_recep.getText().trim();
+            String telefono = jtextfieldTelefono_recep.getText().trim();
+            String Codigo_recepcionista = JtexfieldCodigo_recep.getText().trim();
+            String fecha_contratacion= Jtexfieldfechacontratacion_recep_.getText().trim();
+            String turno = JComboTurno.getSelectedItem().toString();
+            
+
+            if (cedula.isEmpty()||nombres.isEmpty() || apellidos.isEmpty() || fecha_nacimiento.isEmpty()
+                    || sexo.isEmpty() || eps.isEmpty() || correo.isEmpty() || telefono.isEmpty() || Codigo_recepcionista.isEmpty()||fecha_contratacion.isEmpty()||turno.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Todos los campos son obligatorios",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            LocalDate fechaNacimiento;
+            LocalDate fechaContratacion;
+            try {
+                fechaNacimiento = LocalDate.parse(fecha_nacimiento);
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Formato de fecha inválido. Usa YYYY-MM-DD",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                fechaContratacion = LocalDate.parse(fecha_contratacion);
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Formato de fecha inválido. Usa YYYY-MM-DD",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Recepcionista nuevoRecepcionista = new Recepcionista(
+                    cedula,
+                    nombres,
+                    apellidos,
+                    fechaNacimiento,
+                    sexo,
+                    eps,
+                    correo,
+                    telefono,
+                    Codigo_recepcionista,
+                    fechaContratacion,
+                    turno
+                    
+                    
+            );
+            recepcionistaDAO.guardarRecepcionista(nuevoRecepcionista);
+
+            JOptionPane.showMessageDialog(this,
+                    "Recepcionista guardado exitosamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            limpiarFormulario();
+            cargarDatosEnTabla();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al guardar médico: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
 
     private void cargarDatosEnTabla() {
         tableModel.setRowCount(0);
@@ -134,167 +257,318 @@ public class admin extends javax.swing.JFrame {
                 medico.getFechaNacimiento(),
                 medico.getSexo(),
                 medico.getEps()
-
             };
             tableModel.addRow(row);
         }
     }
-    private void eliminarDoctorSeleccionado() {
-    int filaSeleccionada = TablaDoctores.getSelectedRow();
-    if (filaSeleccionada == -1) {
-        JOptionPane.showMessageDialog(this, "Seleccione un médico de la tabla.", "Error", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
     
-    String numeroDocumento = (String) tableModel.getValueAt(filaSeleccionada, 3); // Asumiendo que columna 3 = numeroDocumento
+    //cargar tabla para recepcionista
     
-    int confirmacion = JOptionPane.showConfirmDialog(
-        this, 
-        "¿Eliminar al médico con documento " + numeroDocumento + "?",
-        "Confirmar",
-        JOptionPane.YES_NO_OPTION
-    );
-    
-    if (confirmacion == JOptionPane.YES_OPTION) {
-        boolean eliminado = medicoDAO.eliminarMedico(numeroDocumento);
-        if (eliminado) {
-            JOptionPane.showMessageDialog(this, "Médico eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            cargarDatosEnTabla(); // Actualizar tabla
-        } else {
-            JOptionPane.showMessageDialog(this, "No se encontró el médico.", "Error", JOptionPane.ERROR_MESSAGE);
+     private void cargarDatosEnTablaRecepcionista() {
+        tableModelRecepcionista.setRowCount(0);
+        List<Recepcionista> recepcionistas = recepcionistaDAO.cargarTodos();
+
+        for (Recepcionista recepcionista : recepcionistas) {
+            Object[] row = {
+                recepcionista.getNumeroDocumento(),
+                recepcionista.getNombres(),
+                recepcionista.getApellidos(),
+                recepcionista.getFechaNacimiento(),
+                recepcionista.getSexo(),
+                recepcionista.getEps(),
+                recepcionista.getEmail(),
+                recepcionista.getCelular(),
+                recepcionista.getCodigoEmpleado(),
+                recepcionista.getFechaContratacion(),
+                recepcionista.getTurno()
+                
+                
+            };
+           tableModelRecepcionista.addRow(row);
         }
     }
-}
-    private void cargarDoctorEnFormulario() {
-    int filaSeleccionada = TablaDoctores.getSelectedRow();
-    
-    if (filaSeleccionada == -1) {
-        return; // No hay fila seleccionada
-    }
-    
-    try {
-        // Obtener los datos de la fila seleccionada
-        String nombres = tableModel.getValueAt(filaSeleccionada, 0).toString();
-        String apellidos = tableModel.getValueAt(filaSeleccionada, 1).toString();
-        String correo = tableModel.getValueAt(filaSeleccionada, 2).toString();
-        String cedula = tableModel.getValueAt(filaSeleccionada, 3).toString();
-        String telefono = tableModel.getValueAt(filaSeleccionada, 4).toString();
-        String especialidad = tableModel.getValueAt(filaSeleccionada, 5).toString();
-        
-        // Manejar la fecha (puede ser LocalDate o String)
-        Object fechaObj = tableModel.getValueAt(filaSeleccionada, 6);
-        String fechaStr = (fechaObj instanceof LocalDate) ? 
-                         ((LocalDate)fechaObj).toString() : 
-                         fechaObj.toString();
-        
-        String sexo = tableModel.getValueAt(filaSeleccionada, 7).toString();
-        String eps = tableModel.getValueAt(filaSeleccionada, 8).toString();
-        
-        // Cargar datos en los campos del formulario
-        txtNombre.setText(nombres);
-        txtApellidos.setText(apellidos);
-        txtCorreo.setText(correo);
-        txtCedula.setText(cedula);
-        txtTelefono.setText(telefono);
-        cbEspecialidad.setSelectedItem(especialidad);
-        txtFechaNacimiento.setText(fechaStr);
-        cbSexo2.setSelectedItem(sexo);
-        cbEpss.setSelectedItem(eps);
-        
-        // Guardar la cédula original para referencia al modificar
-        this.cedulaOriginal = cedula;
-        
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(this,
-            "Error al cargar datos del doctor: " + ex.getMessage(),
-            "Error",
-            JOptionPane.ERROR_MESSAGE);
-    }
-}
-    private void actualizarDoctor() {
-    try {
-        // Obtener los datos modificados del formulario
-        String nombres = txtNombre.getText().trim();
-        String apellidos = txtApellidos.getText().trim();
-        String correo = txtCorreo.getText().trim();
-        String cedula = txtCedula.getText().trim();
-        String telefono = txtTelefono.getText().trim();
-        String especialidad = cbEspecialidad.getSelectedItem().toString();
-        String sexo = cbSexo2.getSelectedItem().toString();
-        String eps = cbEpss.getSelectedItem().toString();
-        LocalDate fechaNacimiento = LocalDate.parse(txtFechaNacimiento.getText().trim());
 
-        // Validar campos obligatorios
-        if (nombres.isEmpty() || apellidos.isEmpty() || correo.isEmpty() || 
-            cedula.isEmpty() || telefono.isEmpty() || especialidad.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "Todos los campos son obligatorios",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+    private void eliminarDoctorSeleccionado() {
+        int filaSeleccionada = TablaDoctores.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un médico de la tabla.", "Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Crear el objeto médico actualizado
-        Medico medicoActualizado = new Medico(
-            nombres, apellidos, correo, cedula, telefono, 
-            especialidad, fechaNacimiento, sexo, eps
+        String numeroDocumento = (String) tableModel.getValueAt(filaSeleccionada, 3);
+
+        int confirmacion = JOptionPane.showConfirmDialog(
+                this, 
+                "¿Eliminar al médico con documento " + numeroDocumento + "?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
         );
 
-        // Actualizar en el DAO
-        boolean actualizado = medicoDAO.actualizarMedico(cedulaOriginal, medicoActualizado);
-        
-        if (actualizado) {
-            JOptionPane.showMessageDialog(this,
-                "Doctor actualizado exitosamente",
-                "Éxito",
-                JOptionPane.INFORMATION_MESSAGE);
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            boolean eliminado = medicoDAO.eliminarMedico(numeroDocumento);
+            if (eliminado) {
+                JOptionPane.showMessageDialog(this, "Médico eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                cargarDatosEnTabla();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró el médico.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    private void eliminarRecepcionistaSeleccionado() {
+        int filaSeleccionada = TabladeRecepcionistas.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un recepcionista de la tabla.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String numeroDocumento = (String) tableModelRecepcionista.getValueAt(filaSeleccionada, 0);
+
+        int confirmacion = JOptionPane.showConfirmDialog(
+                this, 
+                "¿Eliminar al recepcionista con documento " + numeroDocumento + "?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            boolean eliminado = recepcionistaDAO.eliminarRecepcionista(numeroDocumento);
+            if (eliminado) {
+                JOptionPane.showMessageDialog(this, "Recepcionista eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                cargarDatosEnTablaRecepcionista();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró al recepcionista.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+
+    private void cargarDoctorEnFormulario() {
+        int filaSeleccionada = TablaDoctores.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            return;
+        }
+
+        try {
+            String nombres = tableModel.getValueAt(filaSeleccionada, 0).toString();
+            String apellidos = tableModel.getValueAt(filaSeleccionada, 1).toString();
+            String correo = tableModel.getValueAt(filaSeleccionada, 2).toString();
+            String cedula = tableModel.getValueAt(filaSeleccionada, 3).toString();
+            String telefono = tableModel.getValueAt(filaSeleccionada, 4).toString();
+            String especialidad = tableModel.getValueAt(filaSeleccionada, 5).toString();
             
-            // Actualizar la tabla
-            cargarDatosEnTabla();
+            Object fechaObj = tableModel.getValueAt(filaSeleccionada, 6);
+            String fechaStr = (fechaObj instanceof LocalDate) ? 
+                            ((LocalDate)fechaObj).toString() : 
+                            fechaObj.toString();
             
-            // Limpiar el formulario
-            limpiarFormulario();
-        } else {
+            String sexo = tableModel.getValueAt(filaSeleccionada, 7).toString();
+            String eps = tableModel.getValueAt(filaSeleccionada, 8).toString();
+
+            txtNombre.setText(nombres);
+            txtApellidos.setText(apellidos);
+            txtCorreo.setText(correo);
+            txtCedula.setText(cedula);
+            txtTelefono.setText(telefono);
+            cbEspecialidad.setSelectedItem(especialidad);
+            txtFechaNacimiento.setText(fechaStr);
+            cbSexo2.setSelectedItem(sexo);
+            cbEpss.setSelectedItem(eps);
+
+            this.cedulaOriginal = cedula;
+
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
-                "No se pudo actualizar el doctor",
+                "Error al cargar datos del doctor: " + ex.getMessage(),
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this,
-            "Error al actualizar doctor: " + e.getMessage(),
-            "Error",
-            JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
     }
-}
-
+    //metodo para seleccionar un recepcionista en la tabla recepcionista
     
+    private void cargarRecepcionistaEnTabla(){
+     int filaseleccionadaRecepcionista = TabladeRecepcionistas.getSelectedRow();
+     
+        if (filaseleccionadaRecepcionista == -1) {
+            return;
+        }
+        
+        try {
+            String cedula = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 0).toString();
+            String nombres = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 1).toString();
+            String apellidos = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 2).toString();
+            Object fechaObj = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 3);
+            String fechaNac = (fechaObj instanceof LocalDate) ? 
+                            ((LocalDate)fechaObj).toString() : 
+                            fechaObj.toString();
+            String sexo = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 4).toString();
+            String eps = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 5).toString();
+            String correo = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 6).toString();
+            String telefono = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 7).toString();
+            String CodigoRecepcionista = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 8).toString();
+            Object fechaObjContrato = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 9);
+            String fechaContratoR = (fechaObjContrato instanceof LocalDate) ? 
+                            ((LocalDate)fechaObjContrato).toString() : 
+                            fechaObjContrato.toString();
+            String Turno = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 10).toString();
+            
+            jtextfielID_recep.setText(cedula);
+            Jtexfieldnombre_recep.setText(nombres);
+            jtextfieldApellido_recep.setText(apellidos);
+            Jtexfieldfechanacimiento_recep.setText(fechaNac);
+            JcomboSexo.setSelectedItem(sexo);
+            JcomboSexo1.setSelectedItem(eps);
+            Jtextfield_correo_recep.setText(correo);
+            jtextfieldTelefono_recep.setText(telefono);
+            JtexfieldCodigo_recep.setText(CodigoRecepcionista);
+            Jtexfieldfechacontratacion_recep_.setText(fechaContratoR);
+            JComboTurno.setSelectedItem(Turno);
+            
+            this.cedulaOriginal = cedula;
+            
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al cargar datos del doctor: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void actualizarDoctor() {
+        try {
+            String nombres = txtNombre.getText().trim();
+            String apellidos = txtApellidos.getText().trim();
+            String correo = txtCorreo.getText().trim();
+            String cedula = txtCedula.getText().trim();
+            String telefono = txtTelefono.getText().trim();
+            String especialidad = cbEspecialidad.getSelectedItem().toString();
+            String sexo = cbSexo2.getSelectedItem().toString();
+            String eps = cbEpss.getSelectedItem().toString();
+            LocalDate fechaNacimiento = LocalDate.parse(txtFechaNacimiento.getText().trim());
+
+            if (nombres.isEmpty() || apellidos.isEmpty() || correo.isEmpty() || 
+                cedula.isEmpty() || telefono.isEmpty() || especialidad.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Todos los campos son obligatorios",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Medico medicoActualizado = new Medico(
+                nombres, apellidos, correo, cedula, telefono, 
+                especialidad, fechaNacimiento, sexo, eps
+            );
+
+            boolean actualizado = medicoDAO.actualizarMedico(cedulaOriginal, medicoActualizado);
+
+            if (actualizado) {
+                JOptionPane.showMessageDialog(this,
+                    "Doctor actualizado exitosamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                cargarDatosEnTabla();
+                limpiarFormulario();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "No se pudo actualizar el doctor",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al actualizar doctor: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+    
+    //metodo para actualizar la tabla recepcionista
+    
+    private void ActuatlizarRecepcionista(){
+        try {
+            String cedula = jtextfielID_recep.getText().trim();
+            String nombres = Jtexfieldnombre_recep.getText().trim();
+            String apellidos = jtextfieldApellido_recep.getText().trim();
+            LocalDate fechaNacimiento = LocalDate.parse(Jtexfieldfechanacimiento_recep.getText().trim());
+            String sexo = JcomboSexo.getSelectedItem().toString();
+            String eps = JcomboSexo1.getSelectedItem().toString();
+            String correo = Jtextfield_correo_recep.getText().trim();
+            String telefono = jtextfieldTelefono_recep.getText().trim();
+            String CodigoRecepcionista = JtexfieldCodigo_recep.getText().trim();
+            LocalDate fechaContratoRecepcionista = LocalDate.parse(Jtexfieldfechacontratacion_recep_.getText().trim());
+            String turno = JComboTurno.getSelectedItem().toString();
+            
+            if (cedula.isEmpty()||nombres.isEmpty()||apellidos.isEmpty()||sexo.isEmpty()||eps.isEmpty()||correo.isEmpty()||telefono.isEmpty()||CodigoRecepcionista.isEmpty()||turno.isEmpty()){
+                JOptionPane.showMessageDialog(this,
+                    "Todos los campos son obligatorios",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+               }
+                Recepcionista recepcionistaUptade = new Recepcionista(
+                cedula,nombres,apellidos,fechaNacimiento,sexo,eps,correo,telefono,CodigoRecepcionista,fechaContratoRecepcionista,turno);
+                
+            
+            boolean ActaulizadoRecepcionista = recepcionistaDAO.actualizarRecepcionista(cedulaOriginal,recepcionistaUptade);
+            
+            if (ActaulizadoRecepcionista) {
+                JOptionPane.showMessageDialog(this,
+                    "Recepcionista actualizado exitosamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                cargarDatosEnTablaRecepcionista();
+                limpiarFormulario();
+            }else {
+                JOptionPane.showMessageDialog(this,
+                    "No se pudo actualizar el recepcionista",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+            
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al actualizar recepcionista: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
     private void limpiarFormulario() {
         txtNombre.setText("");
         txtApellidos.setText("");
         txtCorreo.setText("");
         txtCedula.setText("");
         txtTelefono.setText("");
-        cbEspecialidad.setSelectedItem("");
+        cbEspecialidad.setSelectedIndex(0);
+        txtFechaNacimiento.setText("");
+        cbSexo2.setSelectedIndex(0);
+        cbEpss.setSelectedIndex(0);
     }
-    private void initTableModel() {
-        tableModel = new DefaultTableModel(
-                new Object[]{"Nombre", "Apellidos", "Correo", "Cédula", "Teléfono", "Especialidad", "Fecha Nacimiento", "Sexo", "Eps"}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-             @Override
-        public Class<?> getColumnClass(int columnIndex) {
-            // Especifica el tipo de dato para cada columna
-            if (columnIndex == 6) return LocalDate.class; // Columna de fecha
-            return String.class; // Todas las demás son String
-        }
     
-        };
-        TablaDoctores.setModel(tableModel);
+    //limpiar formulario recepcionista
+    private void LimpiarRecepcionista(){
+        jtextfielID_recep.setText("");
+        Jtexfieldnombre_recep.setText("");
+        jtextfieldApellido_recep.setText("");
+        Jtexfieldfechanacimiento_recep.setText("");
+        JcomboSexo.setSelectedIndex(0);
+        JcomboSexo1.setSelectedIndex(0);
+        Jtextfield_correo_recep.setText("");
+        jtextfieldTelefono_recep.setText("");
+        Jtexfieldfechacontratacion_recep_.setText("");
+        JtexfieldCodigo_recep.setText("");
+        JComboTurno.setSelectedIndex(0);
+        
     }
+    
+    
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {
         cargarDatosEnTabla();
@@ -303,7 +577,6 @@ public class admin extends javax.swing.JFrame {
                 "Actualización",
                 JOptionPane.INFORMATION_MESSAGE);
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -371,19 +644,19 @@ public class admin extends javax.swing.JFrame {
         jPanel11 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        Jtexfieldnombre_recep = new javax.swing.JTextField();
         jSeparator7 = new javax.swing.JSeparator();
         jLabel18 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
+        jtextfieldApellido_recep = new javax.swing.JTextField();
         jSeparator8 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
         Jtextfield_correo_recep = new javax.swing.JTextField();
         jSeparator9 = new javax.swing.JSeparator();
         jLabel20 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
+        jtextfielID_recep = new javax.swing.JTextField();
         jSeparator10 = new javax.swing.JSeparator();
         jLabel21 = new javax.swing.JLabel();
-        jTextField12 = new javax.swing.JTextField();
+        jtextfieldTelefono_recep = new javax.swing.JTextField();
         jSeparator11 = new javax.swing.JSeparator();
         jPanel14 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
@@ -405,8 +678,23 @@ public class admin extends javax.swing.JFrame {
         jLabel30 = new javax.swing.JLabel();
         jPanel23 = new javax.swing.JPanel();
         jLabel31 = new javax.swing.JLabel();
+        jLabel43 = new javax.swing.JLabel();
+        JtexfieldCodigo_recep = new javax.swing.JTextField();
+        jSeparator14 = new javax.swing.JSeparator();
+        jLabel44 = new javax.swing.JLabel();
+        Jtexfieldfechacontratacion_recep_ = new javax.swing.JTextField();
+        jSeparator15 = new javax.swing.JSeparator();
+        JcomboSexo = new javax.swing.JComboBox<>();
+        jLabel45 = new javax.swing.JLabel();
+        jLabel46 = new javax.swing.JLabel();
+        Jtexfieldfechanacimiento_recep = new javax.swing.JTextField();
+        jSeparator16 = new javax.swing.JSeparator();
+        JcomboSexo1 = new javax.swing.JComboBox<>();
+        jLabel47 = new javax.swing.JLabel();
+        jLabel48 = new javax.swing.JLabel();
+        JComboTurno = new javax.swing.JComboBox<>();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        TabladeRecepcionistas = new javax.swing.JTable();
         jPanel12 = new javax.swing.JPanel();
         jPanel24 = new javax.swing.JPanel();
         jLabel32 = new javax.swing.JLabel();
@@ -558,14 +846,14 @@ public class admin extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 980, Short.MAX_VALUE)
+            .addGap(0, 1020, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 120, Short.MAX_VALUE)
         );
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 0, 980, 120));
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 0, 1020, 120));
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -573,7 +861,7 @@ public class admin extends javax.swing.JFrame {
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 980, Short.MAX_VALUE)
+            .addGap(0, 1020, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -771,7 +1059,7 @@ public class admin extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(TablaDoctores);
 
-        jPanel10.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 570, 630));
+        jPanel10.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 620, 630));
 
         jTable2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "DOCTORES DISPONIBLES", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
@@ -805,39 +1093,39 @@ public class admin extends javax.swing.JFrame {
         jPanel13.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel17.setText("NOMBRE:");
-        jPanel13.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 60, 30));
+        jPanel13.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 60, 30));
 
-        jTextField8.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField8.setBorder(null);
-        jTextField8.addKeyListener(new java.awt.event.KeyAdapter() {
+        Jtexfieldnombre_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        Jtexfieldnombre_recep.setBorder(null);
+        Jtexfieldnombre_recep.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField8KeyTyped(evt);
+                Jtexfieldnombre_recepKeyTyped(evt);
             }
         });
-        jPanel13.add(jTextField8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 40, 250, 20));
+        jPanel13.add(Jtexfieldnombre_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 250, 20));
 
         jSeparator7.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator7.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel13.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, 250, 10));
+        jPanel13.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, 250, 10));
 
         jLabel18.setText("APELLIDOS:");
-        jPanel13.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 90, 30));
+        jPanel13.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 90, 30));
 
-        jTextField9.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField9.setBorder(null);
-        jTextField9.addKeyListener(new java.awt.event.KeyAdapter() {
+        jtextfieldApellido_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtextfieldApellido_recep.setBorder(null);
+        jtextfieldApellido_recep.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField9KeyTyped(evt);
+                jtextfieldApellido_recepKeyTyped(evt);
             }
         });
-        jPanel13.add(jTextField9, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 80, 250, 20));
+        jPanel13.add(jtextfieldApellido_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 250, 20));
 
         jSeparator8.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator8.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel13.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 100, 250, 10));
+        jPanel13.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 250, 10));
 
         jLabel19.setText("CORREO:");
-        jPanel13.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 90, 30));
+        jPanel13.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 90, 30));
 
         Jtextfield_correo_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         Jtextfield_correo_recep.setBorder(null);
@@ -846,50 +1134,55 @@ public class admin extends javax.swing.JFrame {
                 Jtextfield_correo_recepFocusLost(evt);
             }
         });
-        jPanel13.add(Jtextfield_correo_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, 250, 20));
+        jPanel13.add(Jtextfield_correo_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 250, 20));
 
         jSeparator9.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator9.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel13.add(jSeparator9, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, 250, 10));
+        jPanel13.add(jSeparator9, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 130, 250, 10));
 
         jLabel20.setText("C.C :");
-        jPanel13.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 160, 30, 30));
+        jPanel13.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, 30, 30));
 
-        jTextField11.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField11.setBorder(null);
-        jTextField11.addKeyListener(new java.awt.event.KeyAdapter() {
+        jtextfielID_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtextfielID_recep.setBorder(null);
+        jtextfielID_recep.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField11KeyTyped(evt);
+                jtextfielID_recepKeyTyped(evt);
             }
         });
-        jPanel13.add(jTextField11, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, 250, 20));
+        jPanel13.add(jtextfielID_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 150, 250, 20));
 
         jSeparator10.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator10.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel13.add(jSeparator10, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 180, 250, 10));
+        jPanel13.add(jSeparator10, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 250, 10));
 
         jLabel21.setText("TELEFONO:");
-        jPanel13.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, 90, 30));
+        jPanel13.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, 90, 30));
 
-        jTextField12.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField12.setBorder(null);
-        jTextField12.addKeyListener(new java.awt.event.KeyAdapter() {
+        jtextfieldTelefono_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtextfieldTelefono_recep.setBorder(null);
+        jtextfieldTelefono_recep.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField12KeyTyped(evt);
+                jtextfieldTelefono_recepKeyTyped(evt);
             }
         });
-        jPanel13.add(jTextField12, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 200, 250, 20));
+        jPanel13.add(jtextfieldTelefono_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 250, 20));
 
         jSeparator11.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator11.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel13.add(jSeparator11, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 220, 250, 10));
+        jPanel13.add(jSeparator11, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 210, 250, 10));
 
         jPanel14.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel14.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel14MouseClicked(evt);
+            }
+        });
         jPanel14.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel22.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel22.setText("ELIMINAR RECEPCIONISTA");
-        jPanel14.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, -1, 40));
+        jPanel14.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, -1, 40));
 
         jPanel15.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -915,14 +1208,19 @@ public class admin extends javax.swing.JFrame {
 
         jPanel14.add(jPanel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, 350, 60));
 
-        jPanel13.add(jPanel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 490, 350, 60));
+        jPanel13.add(jPanel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 520, 390, 60));
 
         jPanel16.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel16.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel16MouseClicked(evt);
+            }
+        });
         jPanel16.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel24.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel24.setText("AGREGAR RECEPCIONISTA");
-        jPanel16.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 240, 40));
+        jPanel16.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 240, 40));
 
         jPanel17.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -932,14 +1230,19 @@ public class admin extends javax.swing.JFrame {
 
         jPanel16.add(jPanel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 350, 60));
 
-        jPanel13.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 350, 60));
+        jPanel13.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 380, 390, 60));
 
         jPanel20.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel20.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel20MouseClicked(evt);
+            }
+        });
         jPanel20.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel28.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel28.setText("MODIFICAR RECEPCIONISTA");
-        jPanel20.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 250, 40));
+        jPanel20.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 250, 40));
 
         jPanel21.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -965,25 +1268,96 @@ public class admin extends javax.swing.JFrame {
 
         jPanel20.add(jPanel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, 350, 60));
 
-        jPanel13.add(jPanel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 420, 350, 60));
+        jPanel13.add(jPanel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 450, 390, 60));
 
-        jPanel11.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 370, 590));
+        jLabel43.setText("CODIGO:");
+        jPanel13.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, 60, 30));
 
-        jTable3.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "RECEPCIONISTAS DISPONIBLES", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        JtexfieldCodigo_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        JtexfieldCodigo_recep.setBorder(null);
+        JtexfieldCodigo_recep.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                JtexfieldCodigo_recepKeyTyped(evt);
+            }
+        });
+        jPanel13.add(JtexfieldCodigo_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 250, 20));
+
+        jSeparator14.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator14.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel13.add(jSeparator14, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 250, 250, 10));
+
+        jLabel44.setText("FECHA CONTRATACION:");
+        jPanel13.add(jLabel44, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 140, 30));
+
+        Jtexfieldfechacontratacion_recep_.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        Jtexfieldfechacontratacion_recep_.setBorder(null);
+        Jtexfieldfechacontratacion_recep_.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                Jtexfieldfechacontratacion_recep_KeyTyped(evt);
+            }
+        });
+        jPanel13.add(Jtexfieldfechacontratacion_recep_, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 270, 200, 20));
+
+        jSeparator15.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator15.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel13.add(jSeparator15, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 290, 200, 10));
+
+        JcomboSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "< SELECCIONE SU SEXO >", "MASCULINO", "FEMENINO", "GENERO NO BINARIO", " ", " " }));
+        jPanel13.add(JcomboSexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 340, 70, -1));
+
+        jLabel45.setText("SEXO :");
+        jPanel13.add(jLabel45, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 340, 40, 20));
+
+        jLabel46.setText("FECHA NACIMIENTO:");
+        jPanel13.add(jLabel46, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, 120, 30));
+
+        Jtexfieldfechanacimiento_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        Jtexfieldfechanacimiento_recep.setBorder(null);
+        Jtexfieldfechanacimiento_recep.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                Jtexfieldfechanacimiento_recepKeyTyped(evt);
+            }
+        });
+        jPanel13.add(Jtexfieldfechanacimiento_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 310, 200, 20));
+
+        jSeparator16.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator16.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel13.add(jSeparator16, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 330, 200, 10));
+
+        JcomboSexo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel13.add(JcomboSexo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 340, 70, -1));
+
+        jLabel47.setText("EPS  :");
+        jPanel13.add(jLabel47, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 40, 20));
+
+        jLabel48.setText("TURNO :");
+        jPanel13.add(jLabel48, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 340, 50, 20));
+
+        JComboTurno.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "< SELECCIONE EL TURNO >", "MAÑANA", "TARDE", "NOCHE", " ", " ", " " }));
+        jPanel13.add(JComboTurno, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 340, 80, -1));
+
+        jPanel11.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 390, 590));
+
+        TabladeRecepcionistas.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "RECEPCIONISTAS DISPONIBLES", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+        TabladeRecepcionistas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "NOMBRE", "APELLIDOS", "CORREO", "CEDULA", "TELEFONO"
+                "CEDULA", "NOMBRE", "APELLIDO", "FECHA NAC", "SEXO", "EPS", "CORREO", "TELEFONO", "COD. EMPLEADO", "F.CONTRATO", "TURNO"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        TabladeRecepcionistas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TabladeRecepcionistasMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(TabladeRecepcionistas);
 
-        jPanel11.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 10, 580, 590));
+        jPanel11.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 10, 630, 590));
 
         Paneles_jtablepane.addTab("Gestion_Recep", jPanel11);
 
@@ -1104,13 +1478,13 @@ public class admin extends javax.swing.JFrame {
 
         Paneles_jtablepane.addTab("Gestion_salas", jPanel12);
 
-        jPanel1.add(Paneles_jtablepane, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 120, 980, 650));
+        jPanel1.add(Paneles_jtablepane, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 120, 1020, 650));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1343, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1224,23 +1598,23 @@ public class admin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtCorreoFocusLost
 
-    private void jTextField8KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField8KeyTyped
+    private void Jtexfieldnombre_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Jtexfieldnombre_recepKeyTyped
         char c = evt.getKeyChar();
 
         if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
             evt.consume();
             JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jTextField8KeyTyped
+    }//GEN-LAST:event_Jtexfieldnombre_recepKeyTyped
 
-    private void jTextField9KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField9KeyTyped
+    private void jtextfieldApellido_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtextfieldApellido_recepKeyTyped
         char c = evt.getKeyChar();
 
         if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
             evt.consume();
             JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jTextField9KeyTyped
+    }//GEN-LAST:event_jtextfieldApellido_recepKeyTyped
 
     private void Jtextfield_correo_recepFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_Jtextfield_correo_recepFocusLost
         String correo = Jtextfield_correo_recep.getText().trim();
@@ -1251,21 +1625,21 @@ public class admin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_Jtextfield_correo_recepFocusLost
 
-    private void jTextField11KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField11KeyTyped
+    private void jtextfielID_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtextfielID_recepKeyTyped
         char c = evt.getKeyChar();
         if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE /*&& c != '.'*/) {
             evt.consume();
             JOptionPane.showMessageDialog(null, "Solo se permiten números", "Error", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jTextField11KeyTyped
+    }//GEN-LAST:event_jtextfielID_recepKeyTyped
 
-    private void jTextField12KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField12KeyTyped
+    private void jtextfieldTelefono_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtextfieldTelefono_recepKeyTyped
         char c = evt.getKeyChar();
         if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE /*&& c != '.'*/) {
             evt.consume();
             JOptionPane.showMessageDialog(null, "Solo se permiten números", "Error", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jTextField12KeyTyped
+    }//GEN-LAST:event_jtextfieldTelefono_recepKeyTyped
 
 
     private void Btn_salirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Btn_salirMouseClicked
@@ -1305,9 +1679,45 @@ public class admin extends javax.swing.JFrame {
             cargarDoctorEnFormulario();
         } else {
             actualizarDoctor();
+            limpiarFormulario();
         }
     
     }//GEN-LAST:event_jPanel6MouseClicked
+
+    private void JtexfieldCodigo_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtexfieldCodigo_recepKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_JtexfieldCodigo_recepKeyTyped
+
+    private void Jtexfieldfechacontratacion_recep_KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Jtexfieldfechacontratacion_recep_KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Jtexfieldfechacontratacion_recep_KeyTyped
+
+    private void Jtexfieldfechanacimiento_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Jtexfieldfechanacimiento_recepKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Jtexfieldfechanacimiento_recepKeyTyped
+
+    private void jPanel16MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel16MouseClicked
+        guardarRecepcionistaDesdeFormulario();
+        cargarDatosEnTablaRecepcionista();
+    }//GEN-LAST:event_jPanel16MouseClicked
+
+    private void TabladeRecepcionistasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabladeRecepcionistasMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TabladeRecepcionistasMouseClicked
+
+    private void jPanel20MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel20MouseClicked
+        if (TabladeRecepcionistas.getSelectedRow() == -1) {
+            cargarRecepcionistaEnTabla();
+        } else {
+            ActuatlizarRecepcionista();
+            LimpiarRecepcionista();
+        }
+    
+    }//GEN-LAST:event_jPanel20MouseClicked
+
+    private void jPanel14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel14MouseClicked
+        eliminarRecepcionistaSeleccionado();
+    }//GEN-LAST:event_jPanel14MouseClicked
 
 
     /**
@@ -1348,6 +1758,13 @@ public class admin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Btn_salir;
+    private javax.swing.JComboBox<String> JComboTurno;
+    private javax.swing.JComboBox<String> JcomboSexo;
+    private javax.swing.JComboBox<String> JcomboSexo1;
+    private javax.swing.JTextField JtexfieldCodigo_recep;
+    private javax.swing.JTextField Jtexfieldfechacontratacion_recep_;
+    private javax.swing.JTextField Jtexfieldfechanacimiento_recep;
+    private javax.swing.JTextField Jtexfieldnombre_recep;
     private javax.swing.JTextField Jtextfield_correo_recep;
     private javax.swing.JPanel Panel_doctor;
     private javax.swing.JPanel Panel_inicio;
@@ -1355,6 +1772,7 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JPanel Panel_salas;
     private javax.swing.JTabbedPane Paneles_jtablepane;
     private javax.swing.JTable TablaDoctores;
+    private javax.swing.JTable TabladeRecepcionistas;
     private javax.swing.JComboBox<String> Tipos_salas_Combobox;
     private javax.swing.JComboBox<String> cbEpss;
     private javax.swing.JComboBox<String> cbEspecialidad;
@@ -1398,6 +1816,12 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel43;
+    private javax.swing.JLabel jLabel44;
+    private javax.swing.JLabel jLabel45;
+    private javax.swing.JLabel jLabel46;
+    private javax.swing.JLabel jLabel47;
+    private javax.swing.JLabel jLabel48;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1438,6 +1862,9 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator11;
     private javax.swing.JSeparator jSeparator12;
     private javax.swing.JSeparator jSeparator13;
+    private javax.swing.JSeparator jSeparator14;
+    private javax.swing.JSeparator jSeparator15;
+    private javax.swing.JSeparator jSeparator16;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
@@ -1448,15 +1875,13 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField13;
     private javax.swing.JTextField jTextField14;
     private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JTextField jtextfielID_recep;
+    private javax.swing.JTextField jtextfieldApellido_recep;
+    private javax.swing.JTextField jtextfieldTelefono_recep;
     private javax.swing.JTextField txtApellidos;
     private javax.swing.JTextField txtCedula;
     private javax.swing.JTextField txtCorreo;
