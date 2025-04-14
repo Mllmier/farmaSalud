@@ -13,11 +13,22 @@
     "especialidad": "Cardilogo",
     "numeroDocumento": "7894561234",
     "nombres": "camilo el gay",
-    "apellidos": "tralalelo",
+    "apellidos": "trapa",
     "fechaNacimiento": "2025-04-09",
     "sexo": "F",
     "eps": "Item 1",
     "email": "camilo@gmail.com",
     "celular": "30001164785"
+  },
+  {
+    "especialidad": "Cardilogo",
+    "numeroDocumento": "1234567890",
+    "nombres": "Juan Andres",
+    "apellidos": "Medina",
+    "fechaNacimiento": "2025-04-13",
+    "sexo": "M",
+    "eps": "Item 1",
+    "email": "juan@gmail.com",
+    "celular": "0987654321"
   }
 ]
