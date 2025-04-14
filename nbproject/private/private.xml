@@ -6,17 +6,18 @@
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/login_.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Rol.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/dao/PacienteDAO.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/dao/SalasDAO.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/Doctor.java</file>
-            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/recepcionista.json</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/dao/MedicoDAO.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/recepcionista.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/InformeDiario.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Persona.java</file>
-            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Recepcionista.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/empleados.json</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Salas.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/citas.json</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/HistoriaMedica.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/dao/usuarioDAO.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/salas.json</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/admin.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Paciente.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Usuario.java</file>
@@ -29,6 +30,7 @@
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/OvalTextField.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/dao/RecepcionistaDAO.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/usuarios.json</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/recepcionista.java</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/pacientes.json</file>
             <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Medico.java</file>
         </group>

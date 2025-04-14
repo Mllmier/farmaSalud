@@ -34,6 +34,7 @@ public class admin extends javax.swing.JFrame {
     private RecepcionistaDAO recepcionistaDAO = new RecepcionistaDAO();
     private  SalasDAO salasDAO = new SalasDAO();
     private DefaultTableModel tableModelSalas = new DefaultTableModel();
+    private String codigoOriginalsala;
 
     /**
      * Creates new form admin
@@ -45,6 +46,8 @@ public class admin extends javax.swing.JFrame {
         setupTableModel();
         cargarDatosEnTabla();
         setupTableModelSalas();
+        cargarDatosenTablaSalas();
+        txtCodigoSala.setEditable(false);
         
         
         
@@ -65,6 +68,16 @@ public class admin extends javax.swing.JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
                     cargarRecepcionistaEnTabla();
+                }
+            }
+        });
+       
+       //salas
+       TablaDeSalas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    cargarSalaenTabla();
                 }
             }
         });
@@ -588,34 +601,42 @@ public class admin extends javax.swing.JFrame {
     
     // DAO salas
     
-    private void guardarSalas(){
-        try {
-            String nombreSala = txtNombreSala.getText().trim();
-            String codigoSala = txtCodigoSala.getText().trim();
-            String tipoSala = Combo_TipoSala.getSelectedItem().toString();
-            Object spinnerSalas = Jspinner_CapacidadSala.getValue();
-            String capacidadSala = spinnerSalas.toString();
-            
-            if (nombreSala.isEmpty()||codigoSala.isEmpty()||tipoSala.isEmpty()||capacidadSala.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "Todos los campos son obligatorios",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            Salas nuevaSala = new Salas(nombreSala, codigoSala, tipoSala, capacidadSala);
-            salasDAO.guardarSalas(nuevaSala);
-            JOptionPane.showMessageDialog(this, "Sala agregada correctamente", "Exito",JOptionPane.INFORMATION_MESSAGE);
-            
-            LimpiarFormularioSalas();
-            cargarDatosenTablaSalas();
-        }catch(Exception e){
+    private void guardarSalas() {
+    try {
+        String nombreSala = txtNombreSala.getText().trim();
+        // Generamos el código automáticamente en lugar de pedirlo
+        String codigoSala = salasDAO.generarCodigoUnico();
+        String tipoSala = Combo_TipoSala.getSelectedItem().toString();
+        Object spinnerSalas = Jspinner_CapacidadSala.getValue();
+        String capacidadSala = spinnerSalas.toString();
+        
+        if (nombreSala.isEmpty() || tipoSala.isEmpty() || capacidadSala.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                    "Error al guardar la sala: " + e.getMessage(),
+                    "Todos los campos son obligatorios (excepto código que se genera automático)",
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
+            return;
         }
+        
+        
+        txtCodigoSala.setText(codigoSala);
+        
+        Salas nuevaSala = new Salas(nombreSala, codigoSala, tipoSala, capacidadSala);
+        salasDAO.guardarSalaConValidacion(nuevaSala);
+        JOptionPane.showMessageDialog(this, 
+            "Sala agregada correctamente con código: " + codigoSala, 
+            "Éxito",
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        LimpiarFormularioSalas();
+        cargarDatosenTablaSalas();
+    } catch(Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "Error al guardar la sala: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
     }
+}
     private void cargarDatosenTablaSalas(){
         tableModelSalas.setRowCount(0);
         
@@ -633,13 +654,136 @@ public class admin extends javax.swing.JFrame {
     }
     }
     
-    private void LimpiarFormularioSalas(){
-        txtNombreSala.setText("");
-        txtCodigoSala.setText("");
-        Combo_TipoSala.setSelectedIndex(0);
-        Jspinner_CapacidadSala.setValue(0);
+    private void actualizarSalas() {
+    try {
+        String nombreSala = txtNombreSala.getText().trim();
+        
+        String codigoSala = this.codigoOriginalsala; 
+        String tipo_sala = Combo_TipoSala.getSelectedItem().toString();
+        Object spinnerSalas = Jspinner_CapacidadSala.getValue();
+        String capacidadSala = spinnerSalas.toString();
+        
+        if (nombreSala.isEmpty() || codigoSala.isEmpty() || tipo_sala.isEmpty() || capacidadSala.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Todos los campos son obligatorios",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        Salas salaActualizada = new Salas(nombreSala, codigoSala, tipo_sala, capacidadSala);
+        
+        boolean actualizadoSala = salasDAO.actualizarSalas(codigoSala, salaActualizada);
+        if (actualizadoSala) {
+            JOptionPane.showMessageDialog(this,
+                "Sala actualizada exitosamente",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            cargarDatosenTablaSalas();
+            LimpiarFormularioSalas();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                "No se pudo actualizar la sala",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+            "Error al actualizar sala: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
     }
+}
+    private void cargarSalaenTabla() {
+    int FilaseleccionadaSala = TablaDeSalas.getSelectedRow();
     
+    if (FilaseleccionadaSala == -1) {
+        return;
+    }
+    try {
+        String nombreSala = tableModelSalas.getValueAt(FilaseleccionadaSala, 0).toString();
+        String codigoSala = tableModelSalas.getValueAt(FilaseleccionadaSala, 1).toString();
+        String tipoSala = tableModelSalas.getValueAt(FilaseleccionadaSala, 2).toString();
+        String capacidadSala = tableModelSalas.getValueAt(FilaseleccionadaSala, 3).toString();
+        
+        txtNombreSala.setText(nombreSala);
+        txtCodigoSala.setText(codigoSala);
+        txtCodigoSala.setEditable(false); 
+        Combo_TipoSala.setSelectedItem(tipoSala);
+        
+        try {
+            int capacidad = Integer.parseInt(capacidadSala);
+            Jspinner_CapacidadSala.setValue(capacidad);
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(this,
+                "La capacidad debe ser un número válido",
+                "Error en formato",
+                JOptionPane.ERROR_MESSAGE);
+            Jspinner_CapacidadSala.setValue(0);
+        }
+        
+        this.codigoOriginalsala = codigoSala;
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+            "Error al cargar datos de la sala: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
+    
+    private void LimpiarFormularioSalas() {
+    txtNombreSala.setText("");
+    txtCodigoSala.setText("");
+    txtCodigoSala.setEditable(false);
+    Combo_TipoSala.setSelectedIndex(0);
+    Jspinner_CapacidadSala.setValue(0);
+} 
+    
+    private void eliminarSalaSeleccionada() {
+    int filaSeleccionada = TablaDeSalas.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, 
+            "Seleccione una sala de la tabla para eliminar.", 
+            "Error", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    
+    String codigoSala = (String) tableModelSalas.getValueAt(filaSeleccionada, 1);
+    String nombreSala = (String) tableModelSalas.getValueAt(filaSeleccionada, 0);
+
+    
+    int confirmacion = JOptionPane.showConfirmDialog(
+        this, 
+        "¿Está seguro que desea eliminar la sala:\n" +
+        "Nombre: " + nombreSala + "\n" +
+        "Código: " + codigoSala + "?",
+        "Confirmar eliminación",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE);
+
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        boolean eliminado = salasDAO.eliminarSala(codigoSala);
+        
+        if (eliminado) {
+            JOptionPane.showMessageDialog(this, 
+                "Sala eliminada exitosamente.", 
+                "Éxito", 
+                JOptionPane.INFORMATION_MESSAGE);
+            cargarDatosenTablaSalas(); 
+            LimpiarFormularioSalas(); 
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "No se pudo eliminar la sala.", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
     
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1494,6 +1638,12 @@ public class admin extends javax.swing.JFrame {
         jPanel24.add(jPanel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, 210, 60));
 
         jPanel26.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jPanel26.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel26.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel26MouseClicked(evt);
+            }
+        });
         jPanel26.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel37.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/editar_1.png"))); // NOI18N
@@ -1507,6 +1657,11 @@ public class admin extends javax.swing.JFrame {
 
         jPanel27.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         jPanel27.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel27.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel27MouseClicked(evt);
+            }
+        });
 
         jLabel39.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Pelim.png"))); // NOI18N
 
@@ -1800,6 +1955,20 @@ public class admin extends javax.swing.JFrame {
         guardarSalas();
         cargarDatosenTablaSalas();
     }//GEN-LAST:event_jPanel25MouseClicked
+
+    private void jPanel26MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel26MouseClicked
+
+        if (TablaDeSalas.getSelectedRow() == -1) {
+            cargarSalaenTabla();
+        } else {
+            actualizarSalas();
+            LimpiarFormularioSalas();
+        }
+    }//GEN-LAST:event_jPanel26MouseClicked
+
+    private void jPanel27MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel27MouseClicked
+        eliminarSalaSeleccionada();
+    }//GEN-LAST:event_jPanel27MouseClicked
 
 
     /**

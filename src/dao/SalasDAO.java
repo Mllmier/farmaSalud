@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import model.Salas;
 
@@ -67,11 +68,25 @@ public class SalasDAO {
         }
     }
     
-    public void guardarSalas(Salas sala) {
-        List<Salas> salas  = cargarTodasSalas();
-        salas.add(sala);
-        guardarTodos(salas);
+    public boolean guardarSalaConValidacion(Salas sala) {
+    // Validaciones básicas
+    if (sala == null || sala.getCodigoSala() == null || sala.getCodigoSala().trim().isEmpty()) {
+        System.err.println("Error: La sala o su código son nulos/vacíos");
+        return false;
     }
+    
+    // Verificar unicidad del código
+    if (existeCodigoSala(sala.getCodigoSala())) {
+        System.err.println("Error: Ya existe una sala con el código " + sala.getCodigoSala());
+        return false;
+    }
+    
+    // Guardar la sala
+    List<Salas> salas = cargarTodasSalas();
+    salas.add(sala);
+    guardarTodos(salas);
+    return true;
+}
     
     public void guardarTodos(List<Salas> salas) {
         try (FileWriter writer = new FileWriter(ARCHIVO_JSON)) {
@@ -80,6 +95,110 @@ public class SalasDAO {
             System.err.println("Error al guardar salas: " + e.getMessage());
         }
     }
+    
+    //metodo para modificar salas
+    public boolean actualizarSalas(String codigoOriginalsala, Salas salasActualizado) {
+    if (codigoOriginalsala == null || codigoOriginalsala.trim().isEmpty()) {
+        System.err.println("Error: Código original de sala es nulo o vacío");
+        return false;
+    }
+    
+    if (salasActualizado == null || salasActualizado.getCodigoSala() == null) {
+        System.err.println("Error: Sala actualizada o su código es nulo");
+        return false;
+    }
+
+    try {
+        List<Salas> salas = cargarTodasSalas();
+        
+        for (int i = 0; i < salas.size(); i++) {
+            Salas salaExistente = salas.get(i);
+            String codigoExistente = salaExistente.getCodigoSala();
+            
+            if (codigoExistente != null && codigoExistente.equals(codigoOriginalsala)) {
+                salas.set(i, salasActualizado);
+                guardarTodos(salas);
+                return true;
+            }
+        }
+        
+        System.err.println("No se encontró sala con código: " + codigoOriginalsala);
+        return false;
+    } catch (Exception e) {
+        System.err.println("Error al actualizar sala: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+
+}
+    public boolean existeCodigoSala(String codigoSala) {
+    if (codigoSala == null || codigoSala.trim().isEmpty()) {
+        return false;
+    }
+    
+    List<Salas> salas = cargarTodasSalas();
+    return salas.stream()
+                .anyMatch(s -> codigoSala.equalsIgnoreCase(s.getCodigoSala()));
+}
+    
+    public String generarCodigoUnico() {
+    List<Salas> salas = cargarTodasSalas();
+    int maxNumero = 0;
+    
+    // Buscar el número más alto existente
+    for (Salas sala : salas) {
+        try {
+            String codigo = sala.getCodigoSala();
+            if (codigo != null && codigo.startsWith("SAL.")) {
+                int numero = Integer.parseInt(codigo.substring(4));
+                if (numero > maxNumero) {
+                    maxNumero = numero;
+                }
+            }
+        } catch (NumberFormatException e) {
+            // Ignorar códigos que no siguen el formato esperado
+        }
+    }
+    
+    // Generar nuevo código
+    return String.format("SAL.%03d", maxNumero + 1);
+}
+
+    public boolean eliminarSala(String codigoSala) {
+    if (codigoSala == null || codigoSala.trim().isEmpty()) {
+        System.err.println("Error: Código de sala nulo o vacío");
+        return false;
+    }
+
+    try {
+        List<Salas> salas = cargarTodasSalas();
+        boolean encontrado = false;
+
+        Iterator<Salas> iterator = salas.iterator();
+        while (iterator.hasNext()) {
+            Salas sala = iterator.next();
+            String codigoActual = sala.getCodigoSala();
+            
+            if (codigoActual != null && codigoActual.equals(codigoSala)) {
+                iterator.remove();
+                encontrado = true;
+                break;
+            }
+        }
+
+        if (encontrado) {
+            guardarTodos(salas);
+            return true;
+        } else {
+            System.err.println("No se encontró sala con código: " + codigoSala);
+            return false;
+        }
+    } catch (Exception e) {
+        System.err.println("Error al eliminar sala: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
 
     
     
