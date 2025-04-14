@@ -531,7 +531,7 @@ public class admin extends javax.swing.JFrame {
             String telefono = jtextfieldTelefono_recep.getText().trim();
             String CodigoRecepcionista = JtexfieldCodigo_recep.getText().trim();
             LocalDate fechaContratoRecepcionista = LocalDate.parse(Jtexfieldfechacontratacion_recep_.getText().trim());
-            String turno = JComboTurno.getSelectedItem().toString();
+           String turno = JComboTurno.getSelectedItem().toString();
             
             if (cedula.isEmpty()||nombres.isEmpty()||apellidos.isEmpty()||sexo.isEmpty()||eps.isEmpty()||correo.isEmpty()||telefono.isEmpty()||CodigoRecepcionista.isEmpty()||turno.isEmpty()){
                 JOptionPane.showMessageDialog(this,
@@ -582,6 +582,49 @@ public class admin extends javax.swing.JFrame {
         cbSexo2.setSelectedIndex(0);
         cbEpss.setSelectedIndex(0);
     }
+    private void initTableModel() {
+        tableModel = new DefaultTableModel(
+                new Object[]{"Nombre", "Apellidos", "Correo", "Cédula", "Teléfono", "Especialidad", "Fecha Nacimiento", "Sexo", "Eps"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+             @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            // Especifica el tipo de dato para cada columna
+            if (columnIndex == 6) return LocalDate.class; // Columna de fecha
+            return String.class; // Todas las demás son String
+        }
+
     
     //limpiar formulario recepcionista
     private void LimpiarRecepcionista(){
@@ -2141,3 +2184,7 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }
+
+    private void initComponents() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
