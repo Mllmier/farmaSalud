@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/Maria%20liz/Desktop/farmaSalud/src/model/OrdenMedica.java</file>
             <file>file:/C:/Users/Maria%20liz/Desktop/farmaSalud/src/model/HistoriaMedica.java</file>
             <file>file:/C:/Users/Maria%20liz/Desktop/farmaSalud/src/resources/data/pacientes.json</file>
@@ -11,6 +12,46 @@
             <file>file:/C:/Users/Maria%20liz/Desktop/farmaSalud/src/dao/MedicoDAO.java</file>
             <file>file:/C:/Users/Maria%20liz/Desktop/farmaSalud/src/farmasalud/view/recepcionista.java</file>
             <file>file:/C:/Users/Maria%20liz/Desktop/farmaSalud/src/dao/PacienteDAO.java</file>
+=======
+<<<<<<< HEAD
+            <file>file:/C:/Users/Maria%20liz/Desktop/farmaSalud/src/dao/usuarioDAO.java</file>
+            <file>file:/C:/Users/Maria%20liz/Desktop/farmaSalud/src/farmasalud/view/Doctor.java</file>
+            <file>file:/C:/Users/Maria%20liz/Desktop/farmaSalud/src/farmasalud/view/admin.java</file>
+            <file>file:/C:/Users/Maria%20liz/Desktop/farmaSalud/src/dao/MedicoDAO.java</file>
+            <file>file:/C:/Users/Maria%20liz/Desktop/farmaSalud/src/farmasalud/view/recepcionista.java</file>
+=======
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/login_.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Rol.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/dao/PacienteDAO.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/dao/SalasDAO.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/Doctor.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/dao/MedicoDAO.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/recepcionista.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/InformeDiario.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Persona.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/empleados.json</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Salas.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/citas.json</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/HistoriaMedica.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/dao/usuarioDAO.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/salas.json</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/admin.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Paciente.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Usuario.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/PanelRound.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Administrador.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/Paciente.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Medicamento.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Cita.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/medicamentos.json</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/farmasalud/view/OvalTextField.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/dao/RecepcionistaDAO.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/usuarios.json</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/recepcionista.java</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/resources/data/pacientes.json</file>
+            <file>file:/C:/Users/usuario/Downloads/farmaSalud/src/model/Medico.java</file>
+>>>>>>> 26381007942af4494002f287381af3f6383c9b02
+>>>>>>> 816aa5730976a3d1e2e0becfb9bf8d0d1957ddb0
         </group>
     </open-files>
 </project-private>

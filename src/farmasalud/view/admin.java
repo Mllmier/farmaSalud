@@ -531,7 +531,11 @@ public class admin extends javax.swing.JFrame {
             String telefono = jtextfieldTelefono_recep.getText().trim();
             String CodigoRecepcionista = JtexfieldCodigo_recep.getText().trim();
             LocalDate fechaContratoRecepcionista = LocalDate.parse(Jtexfieldfechacontratacion_recep_.getText().trim());
+<<<<<<< HEAD
             String turno = JComboTurno.getSelectedItem().toString();
+=======
+           String turno = JComboTurno.getSelectedItem().toString();
+>>>>>>> 816aa5730976a3d1e2e0becfb9bf8d0d1957ddb0
             
             if (cedula.isEmpty()||nombres.isEmpty()||apellidos.isEmpty()||sexo.isEmpty()||eps.isEmpty()||correo.isEmpty()||telefono.isEmpty()||CodigoRecepcionista.isEmpty()||turno.isEmpty()){
                 JOptionPane.showMessageDialog(this,
@@ -581,6 +585,7 @@ public class admin extends javax.swing.JFrame {
         txtFechaNacimiento.setText("");
         cbSexo2.setSelectedIndex(0);
         cbEpss.setSelectedIndex(0);
+<<<<<<< HEAD
     }
     
     //limpiar formulario recepcionista
@@ -599,6 +604,69 @@ public class admin extends javax.swing.JFrame {
         
     }
     
+=======
+    }
+    private void initTableModel() {
+        tableModel = new DefaultTableModel(
+                new Object[]{"Nombre", "Apellidos", "Correo", "Cédula", "Teléfono", "Especialidad", "Fecha Nacimiento", "Sexo", "Eps"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+             @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            // Especifica el tipo de dato para cada columna
+            if (columnIndex == 6) return LocalDate.class; // Columna de fecha
+            return String.class; // Todas las demás son String
+        }
+
+    
+    //limpiar formulario recepcionista
+    private void LimpiarRecepcionista(){
+        jtextfielID_recep.setText("");
+        Jtexfieldnombre_recep.setText("");
+        jtextfieldApellido_recep.setText("");
+        Jtexfieldfechanacimiento_recep.setText("");
+        JcomboSexo.setSelectedIndex(0);
+        JcomboSexo1.setSelectedIndex(0);
+        Jtextfield_correo_recep.setText("");
+        jtextfieldTelefono_recep.setText("");
+        Jtexfieldfechacontratacion_recep_.setText("");
+        JtexfieldCodigo_recep.setText("");
+        JComboTurno.setSelectedIndex(0);
+        
+    }
+    
+>>>>>>> 816aa5730976a3d1e2e0becfb9bf8d0d1957ddb0
     // DAO salas
     
     private void guardarSalas() {
@@ -2141,3 +2209,7 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }
+
+    private void initComponents() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
