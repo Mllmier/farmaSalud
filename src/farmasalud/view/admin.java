@@ -5,19 +5,20 @@
 package farmasalud.view;
 
 import dao.MedicoDAO;
+import dao.RecepcionistaDAO;
+import dao.SalasDAO;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import static java.time.temporal.TemporalQueries.localDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import model.Medico;
+import model.Recepcionista;
+import model.Salas;
 
 /**
  *
@@ -26,56 +27,144 @@ import model.Medico;
 public class admin extends javax.swing.JFrame {
 
     private DefaultTableModel tableModel;
+    //tableModel para recepcionista
+    private DefaultTableModel tableModelRecepcionista = new DefaultTableModel();
     private MedicoDAO medicoDAO = new MedicoDAO();
+    private String cedulaOriginal;
+    private RecepcionistaDAO recepcionistaDAO = new RecepcionistaDAO();
+    private  SalasDAO salasDAO = new SalasDAO();
+    private DefaultTableModel tableModelSalas = new DefaultTableModel();
+    private String codigoOriginalsala;
 
     /**
      * Creates new form admin
      */
     public admin() {
         initComponents();
+        setupTableModelRecepcionista();
+        cargarDatosEnTablaRecepcionista();
         setupTableModel();
         cargarDatosEnTabla();
-
+        setupTableModelSalas();
+        cargarDatosenTablaSalas();
+        txtCodigoSala.setEditable(false);
+        
+        
+        
+        
+        //doctores
+        TablaDoctores.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    cargarDoctorEnFormulario();
+                }
+            }
+        });
+        
+        //recepcionista
+       TabladeRecepcionistas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    cargarRecepcionistaEnTabla();
+                }
+            }
+        });
+       
+       //salas
+       TablaDeSalas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    cargarSalaenTabla();
+                }
+            }
+        });
+        
     }
 
+    //tableModel de doctores
     private void setupTableModel() {
-        tableModel = (DefaultTableModel) jTable1.getModel();
+        tableModel = new DefaultTableModel(
+                new Object[]{"Nombre", "Apellidos", "Correo", "Cédula", "Teléfono", "Especialidad", "Fecha Nacimiento", "Sexo", "Eps"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 6) return LocalDate.class;
+                return String.class;
+            }
+        };
+        TablaDoctores.setModel(tableModel);
     }
+    
+    //tableModel para recepcionista
+     private void setupTableModelRecepcionista() {
+        tableModelRecepcionista = new DefaultTableModel(
+                new Object[]{"Cedula","Nombre", "Apellidos", "Fecha Nacimiento" , "Sexo", "Eps","Correo", "Teléfono", "Codigo Empleado", "Fecha Contratacion","Turno"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 3|| columnIndex == 9) return LocalDate.class;
+                return String.class;
+            }
+        };
+        TabladeRecepcionistas.setModel(tableModelRecepcionista);
+    }
+     
+     //tablemodel para salas
+     
+     private void setupTableModelSalas(){
+        tableModelSalas = new DefaultTableModel(
+        new Object[]{"Nombre Sala","Codigo Sala","Tipo Sala","Capacidad"},0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        TablaDeSalas.setModel(tableModelSalas);
+     }
+    
 
     private void guardarMedicoDesdeFormulario() {
-       try {
-        String nombres = txtNombre.getText().trim();
-        String apellidos = txtApellidos.getText().trim();
-        String correo = txtCorreo.getText().trim();
-        String cedula = txtCedula.getText().trim();
-        String telefono = txtTelefono.getText().trim();
-        String especialidad = cbEspecialidad.getText().toString();
-        String sexo = cbSexo2.getSelectedItem().toString();
-        String eps = cbEpss.getSelectedItem().toString();
-        String fechaStr = txtFechaNacimiento.getText().trim();
-
-        if (nombres.isEmpty() || apellidos.isEmpty() || correo.isEmpty()
-                || cedula.isEmpty() || telefono.isEmpty() || especialidad.isEmpty() || fechaStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Todos los campos son obligatorios",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        LocalDate fechaNacimiento;
         try {
-            fechaNacimiento = LocalDate.parse(fechaStr);
-        } catch (DateTimeParseException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Formato de fecha inválido. Usa YYYY-MM-DD",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+            String nombres = txtNombre.getText().trim();
+            String apellidos = txtApellidos.getText().trim();
+            String correo = txtCorreo.getText().trim();
+            String cedula = txtCedula.getText().trim();
+            String telefono = txtTelefono.getText().trim();
+            String especialidad = cbEspecialidad.getSelectedItem().toString();
+            String sexo = cbSexo2.getSelectedItem().toString();
+            String eps = cbEpss.getSelectedItem().toString();
+            String fechaStr = txtFechaNacimiento.getText().trim();
+
+            if (nombres.isEmpty() || apellidos.isEmpty() || correo.isEmpty()
+                    || cedula.isEmpty() || telefono.isEmpty() || especialidad.isEmpty() || fechaStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Todos los campos son obligatorios",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            LocalDate fechaNacimiento;
+            try {
+                fechaNacimiento = LocalDate.parse(fechaStr);
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Formato de fecha inválido. Usa YYYY-MM-DD",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             Medico nuevoMedico = new Medico(
-                    
-            
                     nombres,
                     apellidos,
                     correo,
@@ -86,7 +175,6 @@ public class admin extends javax.swing.JFrame {
                     sexo,
                     eps
             );
-            nuevoMedico.setFechaNacimiento(LocalDate.now());
             medicoDAO.guardarMedico(nuevoMedico);
 
             JOptionPane.showMessageDialog(this,
@@ -94,7 +182,7 @@ public class admin extends javax.swing.JFrame {
                     "Éxito",
                     JOptionPane.INFORMATION_MESSAGE);
 
-            //limpiarFormulario();
+            limpiarFormulario();
             cargarDatosEnTabla();
 
         } catch (Exception e) {
@@ -103,8 +191,87 @@ public class admin extends javax.swing.JFrame {
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
-
     }
+    //Guardar recepcionista
+    
+    private void guardarRecepcionistaDesdeFormulario() {
+        try {
+            String cedula = jtextfielID_recep.getText().trim();
+            String nombres = Jtexfieldnombre_recep.getText().trim();
+            String apellidos = jtextfieldApellido_recep.getText().trim();
+            String fecha_nacimiento = Jtexfieldfechanacimiento_recep.getText().trim();
+            String sexo = JcomboSexo.getSelectedItem().toString();
+            String eps = JcomboSexo1.getSelectedItem().toString();
+            String correo = Jtextfield_correo_recep.getText().trim();
+            String telefono = jtextfieldTelefono_recep.getText().trim();
+            String Codigo_recepcionista = JtexfieldCodigo_recep.getText().trim();
+            String fecha_contratacion= Jtexfieldfechacontratacion_recep_.getText().trim();
+            String turno = JComboTurno.getSelectedItem().toString();
+            
+
+            if (cedula.isEmpty()||nombres.isEmpty() || apellidos.isEmpty() || fecha_nacimiento.isEmpty()
+                    || sexo.isEmpty() || eps.isEmpty() || correo.isEmpty() || telefono.isEmpty() || Codigo_recepcionista.isEmpty()||fecha_contratacion.isEmpty()||turno.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Todos los campos son obligatorios",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            LocalDate fechaNacimiento;
+            LocalDate fechaContratacion;
+            try {
+                fechaNacimiento = LocalDate.parse(fecha_nacimiento);
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Formato de fecha inválido. Usa YYYY-MM-DD",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                fechaContratacion = LocalDate.parse(fecha_contratacion);
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Formato de fecha inválido. Usa YYYY-MM-DD",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Recepcionista nuevoRecepcionista = new Recepcionista(
+                    cedula,
+                    nombres,
+                    apellidos,
+                    fechaNacimiento,
+                    sexo,
+                    eps,
+                    correo,
+                    telefono,
+                    Codigo_recepcionista,
+                    fechaContratacion,
+                    turno
+                    
+                    
+            );
+            recepcionistaDAO.guardarRecepcionista(nuevoRecepcionista);
+
+            JOptionPane.showMessageDialog(this,
+                    "Recepcionista guardado exitosamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            limpiarFormulario();
+            cargarDatosEnTabla();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al guardar médico: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
 
     private void cargarDatosEnTabla() {
         tableModel.setRowCount(0);
@@ -121,31 +288,503 @@ public class admin extends javax.swing.JFrame {
                 medico.getFechaNacimiento(),
                 medico.getSexo(),
                 medico.getEps()
-
             };
             tableModel.addRow(row);
         }
     }
+    
+    //cargar tabla para recepcionista
+    
+     private void cargarDatosEnTablaRecepcionista() {
+        tableModelRecepcionista.setRowCount(0);
+        List<Recepcionista> recepcionistas = recepcionistaDAO.cargarTodos();
 
-    /*
+        for (Recepcionista recepcionista : recepcionistas) {
+            Object[] row = {
+                recepcionista.getNumeroDocumento(),
+                recepcionista.getNombres(),
+                recepcionista.getApellidos(),
+                recepcionista.getFechaNacimiento(),
+                recepcionista.getSexo(),
+                recepcionista.getEps(),
+                recepcionista.getEmail(),
+                recepcionista.getCelular(),
+                recepcionista.getCodigoEmpleado(),
+                recepcionista.getFechaContratacion(),
+                recepcionista.getTurno()
+                
+                
+            };
+           tableModelRecepcionista.addRow(row);
+        }
+    }
+
+    private void eliminarDoctorSeleccionado() {
+        int filaSeleccionada = TablaDoctores.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un médico de la tabla.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String numeroDocumento = (String) tableModel.getValueAt(filaSeleccionada, 3);
+
+        int confirmacion = JOptionPane.showConfirmDialog(
+                this, 
+                "¿Eliminar al médico con documento " + numeroDocumento + "?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            boolean eliminado = medicoDAO.eliminarMedico(numeroDocumento);
+            if (eliminado) {
+                JOptionPane.showMessageDialog(this, "Médico eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                cargarDatosEnTabla();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró el médico.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    private void eliminarRecepcionistaSeleccionado() {
+        int filaSeleccionada = TabladeRecepcionistas.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un recepcionista de la tabla.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String numeroDocumento = (String) tableModelRecepcionista.getValueAt(filaSeleccionada, 0);
+
+        int confirmacion = JOptionPane.showConfirmDialog(
+                this, 
+                "¿Eliminar al recepcionista con documento " + numeroDocumento + "?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            boolean eliminado = recepcionistaDAO.eliminarRecepcionista(numeroDocumento);
+            if (eliminado) {
+                JOptionPane.showMessageDialog(this, "Recepcionista eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                cargarDatosEnTablaRecepcionista();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró al recepcionista.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+
+    private void cargarDoctorEnFormulario() {
+        int filaSeleccionada = TablaDoctores.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            return;
+        }
+
+        try {
+            String nombres = tableModel.getValueAt(filaSeleccionada, 0).toString();
+            String apellidos = tableModel.getValueAt(filaSeleccionada, 1).toString();
+            String correo = tableModel.getValueAt(filaSeleccionada, 2).toString();
+            String cedula = tableModel.getValueAt(filaSeleccionada, 3).toString();
+            String telefono = tableModel.getValueAt(filaSeleccionada, 4).toString();
+            String especialidad = tableModel.getValueAt(filaSeleccionada, 5).toString();
+            
+            Object fechaObj = tableModel.getValueAt(filaSeleccionada, 6);
+            String fechaStr = (fechaObj instanceof LocalDate) ? 
+                            ((LocalDate)fechaObj).toString() : 
+                            fechaObj.toString();
+            
+            String sexo = tableModel.getValueAt(filaSeleccionada, 7).toString();
+            String eps = tableModel.getValueAt(filaSeleccionada, 8).toString();
+
+            txtNombre.setText(nombres);
+            txtApellidos.setText(apellidos);
+            txtCorreo.setText(correo);
+            txtCedula.setText(cedula);
+            txtTelefono.setText(telefono);
+            cbEspecialidad.setSelectedItem(especialidad);
+            txtFechaNacimiento.setText(fechaStr);
+            cbSexo2.setSelectedItem(sexo);
+            cbEpss.setSelectedItem(eps);
+
+            this.cedulaOriginal = cedula;
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                "Error al cargar datos del doctor: " + ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    //metodo para seleccionar un recepcionista en la tabla recepcionista
+    
+    private void cargarRecepcionistaEnTabla(){
+     int filaseleccionadaRecepcionista = TabladeRecepcionistas.getSelectedRow();
+     
+        if (filaseleccionadaRecepcionista == -1) {
+            return;
+        }
+        
+        try {
+            String cedula = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 0).toString();
+            String nombres = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 1).toString();
+            String apellidos = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 2).toString();
+            Object fechaObj = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 3);
+            String fechaNac = (fechaObj instanceof LocalDate) ? 
+                            ((LocalDate)fechaObj).toString() : 
+                            fechaObj.toString();
+            String sexo = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 4).toString();
+            String eps = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 5).toString();
+            String correo = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 6).toString();
+            String telefono = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 7).toString();
+            String CodigoRecepcionista = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 8).toString();
+            Object fechaObjContrato = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 9);
+            String fechaContratoR = (fechaObjContrato instanceof LocalDate) ? 
+                            ((LocalDate)fechaObjContrato).toString() : 
+                            fechaObjContrato.toString();
+            String Turno = tableModelRecepcionista.getValueAt(filaseleccionadaRecepcionista, 10).toString();
+            
+            jtextfielID_recep.setText(cedula);
+            Jtexfieldnombre_recep.setText(nombres);
+            jtextfieldApellido_recep.setText(apellidos);
+            Jtexfieldfechanacimiento_recep.setText(fechaNac);
+            JcomboSexo.setSelectedItem(sexo);
+            JcomboSexo1.setSelectedItem(eps);
+            Jtextfield_correo_recep.setText(correo);
+            jtextfieldTelefono_recep.setText(telefono);
+            JtexfieldCodigo_recep.setText(CodigoRecepcionista);
+            Jtexfieldfechacontratacion_recep_.setText(fechaContratoR);
+            JComboTurno.setSelectedItem(Turno);
+            
+            this.cedulaOriginal = cedula;
+            
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al cargar datos del doctor: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void actualizarDoctor() {
+        try {
+            String nombres = txtNombre.getText().trim();
+            String apellidos = txtApellidos.getText().trim();
+            String correo = txtCorreo.getText().trim();
+            String cedula = txtCedula.getText().trim();
+            String telefono = txtTelefono.getText().trim();
+            String especialidad = cbEspecialidad.getSelectedItem().toString();
+            String sexo = cbSexo2.getSelectedItem().toString();
+            String eps = cbEpss.getSelectedItem().toString();
+            LocalDate fechaNacimiento = LocalDate.parse(txtFechaNacimiento.getText().trim());
+
+            if (nombres.isEmpty() || apellidos.isEmpty() || correo.isEmpty() || 
+                cedula.isEmpty() || telefono.isEmpty() || especialidad.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Todos los campos son obligatorios",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Medico medicoActualizado = new Medico(
+                nombres, apellidos, correo, cedula, telefono, 
+                especialidad, fechaNacimiento, sexo, eps
+            );
+
+            boolean actualizado = medicoDAO.actualizarMedico(cedulaOriginal, medicoActualizado);
+
+            if (actualizado) {
+                JOptionPane.showMessageDialog(this,
+                    "Doctor actualizado exitosamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                cargarDatosEnTabla();
+                limpiarFormulario();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "No se pudo actualizar el doctor",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al actualizar doctor: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+    
+    //metodo para actualizar la tabla recepcionista
+    
+    private void ActuatlizarRecepcionista(){
+        try {
+            String cedula = jtextfielID_recep.getText().trim();
+            String nombres = Jtexfieldnombre_recep.getText().trim();
+            String apellidos = jtextfieldApellido_recep.getText().trim();
+            LocalDate fechaNacimiento = LocalDate.parse(Jtexfieldfechanacimiento_recep.getText().trim());
+            String sexo = JcomboSexo.getSelectedItem().toString();
+            String eps = JcomboSexo1.getSelectedItem().toString();
+            String correo = Jtextfield_correo_recep.getText().trim();
+            String telefono = jtextfieldTelefono_recep.getText().trim();
+            String CodigoRecepcionista = JtexfieldCodigo_recep.getText().trim();
+            LocalDate fechaContratoRecepcionista = LocalDate.parse(Jtexfieldfechacontratacion_recep_.getText().trim());
+            String turno = JComboTurno.getSelectedItem().toString();
+            
+            if (cedula.isEmpty()||nombres.isEmpty()||apellidos.isEmpty()||sexo.isEmpty()||eps.isEmpty()||correo.isEmpty()||telefono.isEmpty()||CodigoRecepcionista.isEmpty()||turno.isEmpty()){
+                JOptionPane.showMessageDialog(this,
+                    "Todos los campos son obligatorios",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+               }
+                Recepcionista recepcionistaUptade = new Recepcionista(
+                cedula,nombres,apellidos,fechaNacimiento,sexo,eps,correo,telefono,CodigoRecepcionista,fechaContratoRecepcionista,turno);
+                
+            
+            boolean ActaulizadoRecepcionista = recepcionistaDAO.actualizarRecepcionista(cedulaOriginal,recepcionistaUptade);
+            
+            if (ActaulizadoRecepcionista) {
+                JOptionPane.showMessageDialog(this,
+                    "Recepcionista actualizado exitosamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                cargarDatosEnTablaRecepcionista();
+                limpiarFormulario();
+            }else {
+                JOptionPane.showMessageDialog(this,
+                    "No se pudo actualizar el recepcionista",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+            
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al actualizar recepcionista: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
     private void limpiarFormulario() {
         txtNombre.setText("");
         txtApellidos.setText("");
         txtCorreo.setText("");
         txtCedula.setText("");
         txtTelefono.setText("");
-        cbEspecialidad.setText("");
-    }*/
-    private void initTableModel() {
-        tableModel = new DefaultTableModel(
-                new Object[]{"Nombre", "Apellidos", "Correo", "Cédula", "Teléfono", "Especialidad", "Fecha Nacimiento", "Sexo", "Eps"}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        jTable1.setModel(tableModel);
+        cbEspecialidad.setSelectedIndex(0);
+        txtFechaNacimiento.setText("");
+        cbSexo2.setSelectedIndex(0);
+        cbEpss.setSelectedIndex(0);
     }
+    
+    //limpiar formulario recepcionista
+    private void LimpiarRecepcionista(){
+        jtextfielID_recep.setText("");
+        Jtexfieldnombre_recep.setText("");
+        jtextfieldApellido_recep.setText("");
+        Jtexfieldfechanacimiento_recep.setText("");
+        JcomboSexo.setSelectedIndex(0);
+        JcomboSexo1.setSelectedIndex(0);
+        Jtextfield_correo_recep.setText("");
+        jtextfieldTelefono_recep.setText("");
+        Jtexfieldfechacontratacion_recep_.setText("");
+        JtexfieldCodigo_recep.setText("");
+        JComboTurno.setSelectedIndex(0);
+        
+    }
+    
+    // DAO salas
+    
+    private void guardarSalas() {
+    try {
+        String nombreSala = txtNombreSala.getText().trim();
+        // Generamos el código automáticamente en lugar de pedirlo
+        String codigoSala = salasDAO.generarCodigoUnico();
+        String tipoSala = Combo_TipoSala.getSelectedItem().toString();
+        Object spinnerSalas = Jspinner_CapacidadSala.getValue();
+        String capacidadSala = spinnerSalas.toString();
+        
+        if (nombreSala.isEmpty() || tipoSala.isEmpty() || capacidadSala.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Todos los campos son obligatorios (excepto código que se genera automático)",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
+        txtCodigoSala.setText(codigoSala);
+        
+        Salas nuevaSala = new Salas(nombreSala, codigoSala, tipoSala, capacidadSala);
+        salasDAO.guardarSalaConValidacion(nuevaSala);
+        JOptionPane.showMessageDialog(this, 
+            "Sala agregada correctamente con código: " + codigoSala, 
+            "Éxito",
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        LimpiarFormularioSalas();
+        cargarDatosenTablaSalas();
+    } catch(Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "Error al guardar la sala: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+}
+    private void cargarDatosenTablaSalas(){
+        tableModelSalas.setRowCount(0);
+        
+        List<Salas> salas = salasDAO.cargarTodasSalas();
+
+        for (Salas sala : salas) {
+            Object[] row = {
+                sala.getNombreSala(),
+                sala.getCodigoSala(),
+                sala.getTipoSala(),
+                sala.getCapacidadSala(),
+                
+            };
+            tableModelSalas.addRow(row);
+    }
+    }
+    
+    private void actualizarSalas() {
+    try {
+        String nombreSala = txtNombreSala.getText().trim();
+        
+        String codigoSala = this.codigoOriginalsala; 
+        String tipo_sala = Combo_TipoSala.getSelectedItem().toString();
+        Object spinnerSalas = Jspinner_CapacidadSala.getValue();
+        String capacidadSala = spinnerSalas.toString();
+        
+        if (nombreSala.isEmpty() || codigoSala.isEmpty() || tipo_sala.isEmpty() || capacidadSala.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Todos los campos son obligatorios",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        Salas salaActualizada = new Salas(nombreSala, codigoSala, tipo_sala, capacidadSala);
+        
+        boolean actualizadoSala = salasDAO.actualizarSalas(codigoSala, salaActualizada);
+        if (actualizadoSala) {
+            JOptionPane.showMessageDialog(this,
+                "Sala actualizada exitosamente",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            cargarDatosenTablaSalas();
+            LimpiarFormularioSalas();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                "No se pudo actualizar la sala",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+            "Error al actualizar sala: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
+    private void cargarSalaenTabla() {
+    int FilaseleccionadaSala = TablaDeSalas.getSelectedRow();
+    
+    if (FilaseleccionadaSala == -1) {
+        return;
+    }
+    try {
+        String nombreSala = tableModelSalas.getValueAt(FilaseleccionadaSala, 0).toString();
+        String codigoSala = tableModelSalas.getValueAt(FilaseleccionadaSala, 1).toString();
+        String tipoSala = tableModelSalas.getValueAt(FilaseleccionadaSala, 2).toString();
+        String capacidadSala = tableModelSalas.getValueAt(FilaseleccionadaSala, 3).toString();
+        
+        txtNombreSala.setText(nombreSala);
+        txtCodigoSala.setText(codigoSala);
+        txtCodigoSala.setEditable(false); 
+        Combo_TipoSala.setSelectedItem(tipoSala);
+        
+        try {
+            int capacidad = Integer.parseInt(capacidadSala);
+            Jspinner_CapacidadSala.setValue(capacidad);
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(this,
+                "La capacidad debe ser un número válido",
+                "Error en formato",
+                JOptionPane.ERROR_MESSAGE);
+            Jspinner_CapacidadSala.setValue(0);
+        }
+        
+        this.codigoOriginalsala = codigoSala;
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+            "Error al cargar datos de la sala: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
+    
+    private void LimpiarFormularioSalas() {
+    txtNombreSala.setText("");
+    txtCodigoSala.setText("");
+    txtCodigoSala.setEditable(false);
+    Combo_TipoSala.setSelectedIndex(0);
+    Jspinner_CapacidadSala.setValue(0);
+} 
+    
+    private void eliminarSalaSeleccionada() {
+    int filaSeleccionada = TablaDeSalas.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, 
+            "Seleccione una sala de la tabla para eliminar.", 
+            "Error", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    
+    String codigoSala = (String) tableModelSalas.getValueAt(filaSeleccionada, 1);
+    String nombreSala = (String) tableModelSalas.getValueAt(filaSeleccionada, 0);
+
+    
+    int confirmacion = JOptionPane.showConfirmDialog(
+        this, 
+        "¿Está seguro que desea eliminar la sala:\n" +
+        "Nombre: " + nombreSala + "\n" +
+        "Código: " + codigoSala + "?",
+        "Confirmar eliminación",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE);
+
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        boolean eliminado = salasDAO.eliminarSala(codigoSala);
+        
+        if (eliminado) {
+            JOptionPane.showMessageDialog(this, 
+                "Sala eliminada exitosamente.", 
+                "Éxito", 
+                JOptionPane.INFORMATION_MESSAGE);
+            cargarDatosenTablaSalas(); 
+            LimpiarFormularioSalas(); 
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "No se pudo eliminar la sala.", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
+    
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {
         cargarDatosEnTabla();
@@ -154,7 +793,6 @@ public class admin extends javax.swing.JFrame {
                 "Actualización",
                 JOptionPane.INFORMATION_MESSAGE);
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -192,9 +830,7 @@ public class admin extends javax.swing.JFrame {
         txtCedula = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        cbEspecialidad = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
@@ -214,8 +850,9 @@ public class admin extends javax.swing.JFrame {
         cbSexo2 = new javax.swing.JComboBox<>();
         jLabel42 = new javax.swing.JLabel();
         txtFechaNacimiento = new javax.swing.JTextField();
+        cbEspecialidad = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaDoctores = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
@@ -223,19 +860,19 @@ public class admin extends javax.swing.JFrame {
         jPanel11 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        Jtexfieldnombre_recep = new javax.swing.JTextField();
         jSeparator7 = new javax.swing.JSeparator();
         jLabel18 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
+        jtextfieldApellido_recep = new javax.swing.JTextField();
         jSeparator8 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
         Jtextfield_correo_recep = new javax.swing.JTextField();
         jSeparator9 = new javax.swing.JSeparator();
         jLabel20 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
+        jtextfielID_recep = new javax.swing.JTextField();
         jSeparator10 = new javax.swing.JSeparator();
         jLabel21 = new javax.swing.JLabel();
-        jTextField12 = new javax.swing.JTextField();
+        jtextfieldTelefono_recep = new javax.swing.JTextField();
         jSeparator11 = new javax.swing.JSeparator();
         jPanel14 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
@@ -257,18 +894,33 @@ public class admin extends javax.swing.JFrame {
         jLabel30 = new javax.swing.JLabel();
         jPanel23 = new javax.swing.JPanel();
         jLabel31 = new javax.swing.JLabel();
+        jLabel43 = new javax.swing.JLabel();
+        JtexfieldCodigo_recep = new javax.swing.JTextField();
+        jSeparator14 = new javax.swing.JSeparator();
+        jLabel44 = new javax.swing.JLabel();
+        Jtexfieldfechacontratacion_recep_ = new javax.swing.JTextField();
+        jSeparator15 = new javax.swing.JSeparator();
+        JcomboSexo = new javax.swing.JComboBox<>();
+        jLabel45 = new javax.swing.JLabel();
+        jLabel46 = new javax.swing.JLabel();
+        Jtexfieldfechanacimiento_recep = new javax.swing.JTextField();
+        jSeparator16 = new javax.swing.JSeparator();
+        JcomboSexo1 = new javax.swing.JComboBox<>();
+        jLabel47 = new javax.swing.JLabel();
+        jLabel48 = new javax.swing.JLabel();
+        JComboTurno = new javax.swing.JComboBox<>();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        TabladeRecepcionistas = new javax.swing.JTable();
         jPanel12 = new javax.swing.JPanel();
         jPanel24 = new javax.swing.JPanel();
         jLabel32 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
+        txtNombreSala = new javax.swing.JTextField();
         jSeparator12 = new javax.swing.JSeparator();
         jLabel33 = new javax.swing.JLabel();
-        jTextField14 = new javax.swing.JTextField();
+        txtCodigoSala = new javax.swing.JTextField();
         jSeparator13 = new javax.swing.JSeparator();
-        Tipos_salas_Combobox = new javax.swing.JComboBox<>();
-        jSpinner1 = new javax.swing.JSpinner();
+        Combo_TipoSala = new javax.swing.JComboBox<>();
+        Jspinner_CapacidadSala = new javax.swing.JSpinner();
         jLabel34 = new javax.swing.JLabel();
         jPanel25 = new javax.swing.JPanel();
         jLabel35 = new javax.swing.JLabel();
@@ -280,7 +932,7 @@ public class admin extends javax.swing.JFrame {
         jLabel39 = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
+        TablaDeSalas = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -307,7 +959,7 @@ public class admin extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("INICIO");
-        Panel_inicio.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 60, 41));
+        Panel_inicio.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 60, 41));
 
         jPanel2.add(Panel_inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 320, 100));
 
@@ -329,7 +981,7 @@ public class admin extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("GESTION DOCTORES");
-        Panel_doctor.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 187, 41));
+        Panel_doctor.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 30, 187, 41));
 
         jPanel2.add(Panel_doctor, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 320, 100));
 
@@ -351,7 +1003,7 @@ public class admin extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("GESTION RECEPCIONISTAS");
-        Panel_recepcionistas.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 30, 240, 41));
+        Panel_recepcionistas.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 240, 41));
 
         jPanel2.add(Panel_recepcionistas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 450, 320, 100));
 
@@ -373,13 +1025,16 @@ public class admin extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("GESTION SALAS");
-        Panel_salas.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, 156, 41));
+        Panel_salas.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 30, 156, 41));
 
         jPanel2.add(Panel_salas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 550, 320, 100));
 
         Btn_salir.setBackground(new java.awt.Color(10, 92, 184));
         Btn_salir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Btn_salir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Btn_salirMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 Btn_salirMouseEntered(evt);
             }
@@ -392,7 +1047,7 @@ public class admin extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("SALIR");
-        Btn_salir.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 30, 70, 41));
+        Btn_salir.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, 70, 41));
 
         jPanel2.add(Btn_salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 650, 320, 100));
 
@@ -407,14 +1062,14 @@ public class admin extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 980, Short.MAX_VALUE)
+            .addGap(0, 1020, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 120, Short.MAX_VALUE)
         );
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 0, 980, 120));
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 0, 1020, 120));
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -422,7 +1077,7 @@ public class admin extends javax.swing.JFrame {
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 980, Short.MAX_VALUE)
+            .addGap(0, 1020, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -503,21 +1158,8 @@ public class admin extends javax.swing.JFrame {
         jLabel11.setText("TELEFONO :");
         jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 70, 30));
 
-        cbEspecialidad.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        cbEspecialidad.setBorder(null);
-        cbEspecialidad.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                cbEspecialidadKeyTyped(evt);
-            }
-        });
-        jPanel4.add(cbEspecialidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 250, 20));
-
         jLabel12.setText("ESPECIALIDAD :");
         jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, 90, 30));
-
-        jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
-        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel4.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 250, 250, 10));
 
         jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
@@ -554,6 +1196,11 @@ public class admin extends javax.swing.JFrame {
         jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 340, 350, 60));
 
         jPanel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel6MouseClicked(evt);
+            }
+        });
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -566,6 +1213,11 @@ public class admin extends javax.swing.JFrame {
         jPanel4.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, 350, 60));
 
         jPanel9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel9MouseClicked(evt);
+            }
+        });
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
@@ -574,13 +1226,13 @@ public class admin extends javax.swing.JFrame {
 
         jPanel4.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 500, 350, 60));
 
-        jButton1.setText("jButton1");
+        jButton1.setText("ACTUALIZAR TABLA");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 570, -1, -1));
+        jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 580, -1, -1));
 
         cbEpss.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jPanel4.add(cbEpss, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 300, -1, -1));
@@ -604,10 +1256,13 @@ public class admin extends javax.swing.JFrame {
         });
         jPanel4.add(txtFechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 270, 230, -1));
 
+        cbEspecialidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Seleccione  la especialidad del doctor>", "Medico general", "Cardilogo", "terapeusta", " ", " " }));
+        jPanel4.add(cbEspecialidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 260, -1));
+
         jPanel10.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 393, 630));
 
-        jTable1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDoctores.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+        TablaDoctores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null},
@@ -618,9 +1273,9 @@ public class admin extends javax.swing.JFrame {
                 "NOMBRE", "APELLIDO", "CORREO", "CEDULA", "TELEFONO", "ESPECIALIDAD", "FECHA NACIMIENTO", "SEXO", "EPS"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(TablaDoctores);
 
-        jPanel10.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 570, 630));
+        jPanel10.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 620, 630));
 
         jTable2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "DOCTORES DISPONIBLES", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
@@ -654,39 +1309,39 @@ public class admin extends javax.swing.JFrame {
         jPanel13.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel17.setText("NOMBRE:");
-        jPanel13.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 60, 30));
+        jPanel13.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 60, 30));
 
-        jTextField8.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField8.setBorder(null);
-        jTextField8.addKeyListener(new java.awt.event.KeyAdapter() {
+        Jtexfieldnombre_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        Jtexfieldnombre_recep.setBorder(null);
+        Jtexfieldnombre_recep.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField8KeyTyped(evt);
+                Jtexfieldnombre_recepKeyTyped(evt);
             }
         });
-        jPanel13.add(jTextField8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 40, 250, 20));
+        jPanel13.add(Jtexfieldnombre_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 250, 20));
 
         jSeparator7.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator7.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel13.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, 250, 10));
+        jPanel13.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, 250, 10));
 
         jLabel18.setText("APELLIDOS:");
-        jPanel13.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 90, 30));
+        jPanel13.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 90, 30));
 
-        jTextField9.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField9.setBorder(null);
-        jTextField9.addKeyListener(new java.awt.event.KeyAdapter() {
+        jtextfieldApellido_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtextfieldApellido_recep.setBorder(null);
+        jtextfieldApellido_recep.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField9KeyTyped(evt);
+                jtextfieldApellido_recepKeyTyped(evt);
             }
         });
-        jPanel13.add(jTextField9, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 80, 250, 20));
+        jPanel13.add(jtextfieldApellido_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 250, 20));
 
         jSeparator8.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator8.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel13.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 100, 250, 10));
+        jPanel13.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 250, 10));
 
         jLabel19.setText("CORREO:");
-        jPanel13.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 90, 30));
+        jPanel13.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 90, 30));
 
         Jtextfield_correo_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         Jtextfield_correo_recep.setBorder(null);
@@ -695,50 +1350,55 @@ public class admin extends javax.swing.JFrame {
                 Jtextfield_correo_recepFocusLost(evt);
             }
         });
-        jPanel13.add(Jtextfield_correo_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, 250, 20));
+        jPanel13.add(Jtextfield_correo_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 250, 20));
 
         jSeparator9.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator9.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel13.add(jSeparator9, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, 250, 10));
+        jPanel13.add(jSeparator9, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 130, 250, 10));
 
         jLabel20.setText("C.C :");
-        jPanel13.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 160, 30, 30));
+        jPanel13.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, 30, 30));
 
-        jTextField11.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField11.setBorder(null);
-        jTextField11.addKeyListener(new java.awt.event.KeyAdapter() {
+        jtextfielID_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtextfielID_recep.setBorder(null);
+        jtextfielID_recep.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField11KeyTyped(evt);
+                jtextfielID_recepKeyTyped(evt);
             }
         });
-        jPanel13.add(jTextField11, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, 250, 20));
+        jPanel13.add(jtextfielID_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 150, 250, 20));
 
         jSeparator10.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator10.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel13.add(jSeparator10, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 180, 250, 10));
+        jPanel13.add(jSeparator10, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 250, 10));
 
         jLabel21.setText("TELEFONO:");
-        jPanel13.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, 90, 30));
+        jPanel13.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, 90, 30));
 
-        jTextField12.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField12.setBorder(null);
-        jTextField12.addKeyListener(new java.awt.event.KeyAdapter() {
+        jtextfieldTelefono_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtextfieldTelefono_recep.setBorder(null);
+        jtextfieldTelefono_recep.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField12KeyTyped(evt);
+                jtextfieldTelefono_recepKeyTyped(evt);
             }
         });
-        jPanel13.add(jTextField12, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 200, 250, 20));
+        jPanel13.add(jtextfieldTelefono_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 250, 20));
 
         jSeparator11.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator11.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel13.add(jSeparator11, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 220, 250, 10));
+        jPanel13.add(jSeparator11, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 210, 250, 10));
 
         jPanel14.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel14.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel14MouseClicked(evt);
+            }
+        });
         jPanel14.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel22.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel22.setText("ELIMINAR RECEPCIONISTA");
-        jPanel14.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, -1, 40));
+        jPanel14.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, -1, 40));
 
         jPanel15.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -764,14 +1424,19 @@ public class admin extends javax.swing.JFrame {
 
         jPanel14.add(jPanel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, 350, 60));
 
-        jPanel13.add(jPanel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 490, 350, 60));
+        jPanel13.add(jPanel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 520, 390, 60));
 
         jPanel16.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel16.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel16MouseClicked(evt);
+            }
+        });
         jPanel16.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel24.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel24.setText("AGREGAR RECEPCIONISTA");
-        jPanel16.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 240, 40));
+        jPanel16.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 240, 40));
 
         jPanel17.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -781,14 +1446,19 @@ public class admin extends javax.swing.JFrame {
 
         jPanel16.add(jPanel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 350, 60));
 
-        jPanel13.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 350, 60));
+        jPanel13.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 380, 390, 60));
 
         jPanel20.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel20.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel20MouseClicked(evt);
+            }
+        });
         jPanel20.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel28.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel28.setText("MODIFICAR RECEPCIONISTA");
-        jPanel20.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 250, 40));
+        jPanel20.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 250, 40));
 
         jPanel21.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -814,25 +1484,96 @@ public class admin extends javax.swing.JFrame {
 
         jPanel20.add(jPanel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, 350, 60));
 
-        jPanel13.add(jPanel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 420, 350, 60));
+        jPanel13.add(jPanel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 450, 390, 60));
 
-        jPanel11.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 370, 590));
+        jLabel43.setText("CODIGO:");
+        jPanel13.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, 60, 30));
 
-        jTable3.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "RECEPCIONISTAS DISPONIBLES", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        JtexfieldCodigo_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        JtexfieldCodigo_recep.setBorder(null);
+        JtexfieldCodigo_recep.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                JtexfieldCodigo_recepKeyTyped(evt);
+            }
+        });
+        jPanel13.add(JtexfieldCodigo_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 250, 20));
+
+        jSeparator14.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator14.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel13.add(jSeparator14, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 250, 250, 10));
+
+        jLabel44.setText("FECHA CONTRATACION:");
+        jPanel13.add(jLabel44, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 140, 30));
+
+        Jtexfieldfechacontratacion_recep_.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        Jtexfieldfechacontratacion_recep_.setBorder(null);
+        Jtexfieldfechacontratacion_recep_.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                Jtexfieldfechacontratacion_recep_KeyTyped(evt);
+            }
+        });
+        jPanel13.add(Jtexfieldfechacontratacion_recep_, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 270, 200, 20));
+
+        jSeparator15.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator15.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel13.add(jSeparator15, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 290, 200, 10));
+
+        JcomboSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "< SELECCIONE SU SEXO >", "MASCULINO", "FEMENINO", "GENERO NO BINARIO", " ", " " }));
+        jPanel13.add(JcomboSexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 340, 70, -1));
+
+        jLabel45.setText("SEXO :");
+        jPanel13.add(jLabel45, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 340, 40, 20));
+
+        jLabel46.setText("FECHA NACIMIENTO:");
+        jPanel13.add(jLabel46, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, 120, 30));
+
+        Jtexfieldfechanacimiento_recep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        Jtexfieldfechanacimiento_recep.setBorder(null);
+        Jtexfieldfechanacimiento_recep.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                Jtexfieldfechanacimiento_recepKeyTyped(evt);
+            }
+        });
+        jPanel13.add(Jtexfieldfechanacimiento_recep, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 310, 200, 20));
+
+        jSeparator16.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator16.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel13.add(jSeparator16, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 330, 200, 10));
+
+        JcomboSexo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel13.add(JcomboSexo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 340, 70, -1));
+
+        jLabel47.setText("EPS  :");
+        jPanel13.add(jLabel47, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 40, 20));
+
+        jLabel48.setText("TURNO :");
+        jPanel13.add(jLabel48, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 340, 50, 20));
+
+        JComboTurno.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "< SELECCIONE EL TURNO >", "MAÑANA", "TARDE", "NOCHE", " ", " ", " " }));
+        jPanel13.add(JComboTurno, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 340, 80, -1));
+
+        jPanel11.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 390, 590));
+
+        TabladeRecepcionistas.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "RECEPCIONISTAS DISPONIBLES", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+        TabladeRecepcionistas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "NOMBRE", "APELLIDOS", "CORREO", "CEDULA", "TELEFONO"
+                "CEDULA", "NOMBRE", "APELLIDO", "FECHA NAC", "SEXO", "EPS", "CORREO", "TELEFONO", "COD. EMPLEADO", "F.CONTRATO", "TURNO"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        TabladeRecepcionistas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TabladeRecepcionistasMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(TabladeRecepcionistas);
 
-        jPanel11.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 10, 580, 590));
+        jPanel11.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 10, 630, 590));
 
         Paneles_jtablepane.addTab("Gestion_Recep", jPanel11);
 
@@ -847,9 +1588,9 @@ public class admin extends javax.swing.JFrame {
         jLabel32.setText("NOMBRE DE LA SALA:");
         jPanel24.add(jLabel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 170, 30));
 
-        jTextField13.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField13.setBorder(null);
-        jPanel24.add(jTextField13, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, 250, 20));
+        txtNombreSala.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtNombreSala.setBorder(null);
+        jPanel24.add(txtNombreSala, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, 250, 20));
 
         jSeparator12.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator12.setForeground(new java.awt.Color(0, 0, 0));
@@ -859,20 +1600,20 @@ public class admin extends javax.swing.JFrame {
         jLabel33.setText("CODIGO DE LA SALA:");
         jPanel24.add(jLabel33, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 160, 30));
 
-        jTextField14.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField14.setBorder(null);
-        jPanel24.add(jTextField14, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 60, 250, 20));
+        txtCodigoSala.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtCodigoSala.setBorder(null);
+        jPanel24.add(txtCodigoSala, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 60, 250, 20));
 
         jSeparator13.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator13.setForeground(new java.awt.Color(0, 0, 0));
         jPanel24.add(jSeparator13, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 80, 250, 10));
 
-        Tipos_salas_Combobox.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        Tipos_salas_Combobox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "< SELECCIONE UN TIPO DE SALA >", "Sala de Medicina General", "Consultorios Externos", "Sala de Urgencias", "Sala de Pediatría", "Sala de Rayos X", "Sala de Fisioterapia" }));
-        Tipos_salas_Combobox.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        Tipos_salas_Combobox.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel24.add(Tipos_salas_Combobox, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 30, 470, -1));
-        jPanel24.add(jSpinner1, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 70, 260, 30));
+        Combo_TipoSala.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Combo_TipoSala.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "< SELECCIONE UN TIPO DE SALA >", "Sala de Medicina General", "Consultorios Externos", "Sala de Urgencias", "Sala de Pediatría", "Sala de Rayos X", "Sala de Fisioterapia" }));
+        Combo_TipoSala.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        Combo_TipoSala.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel24.add(Combo_TipoSala, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 30, 470, -1));
+        jPanel24.add(Jspinner_CapacidadSala, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 70, 260, 30));
 
         jLabel34.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel34.setText("CAPACIDAD DE CAMAS:");
@@ -880,6 +1621,11 @@ public class admin extends javax.swing.JFrame {
 
         jPanel25.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         jPanel25.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel25.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel25MouseClicked(evt);
+            }
+        });
         jPanel25.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel35.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/mas_1.png"))); // NOI18N
@@ -892,6 +1638,12 @@ public class admin extends javax.swing.JFrame {
         jPanel24.add(jPanel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, 210, 60));
 
         jPanel26.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jPanel26.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel26.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel26MouseClicked(evt);
+            }
+        });
         jPanel26.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel37.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/editar_1.png"))); // NOI18N
@@ -905,6 +1657,11 @@ public class admin extends javax.swing.JFrame {
 
         jPanel27.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         jPanel27.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel27.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel27MouseClicked(evt);
+            }
+        });
 
         jLabel39.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Pelim.png"))); // NOI18N
 
@@ -935,8 +1692,8 @@ public class admin extends javax.swing.JFrame {
 
         jPanel12.add(jPanel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 940, 220));
 
-        jTable4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDeSalas.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        TablaDeSalas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -947,19 +1704,19 @@ public class admin extends javax.swing.JFrame {
                 "NOMBRE", "CODIGO", "TIPO", "CAPACIDAD"
             }
         ));
-        jScrollPane4.setViewportView(jTable4);
+        jScrollPane4.setViewportView(TablaDeSalas);
 
         jPanel12.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 950, 380));
 
         Paneles_jtablepane.addTab("Gestion_salas", jPanel12);
 
-        jPanel1.add(Paneles_jtablepane, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 120, 980, 650));
+        jPanel1.add(Paneles_jtablepane, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 120, 1020, 650));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1343, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1048,14 +1805,6 @@ public class admin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtApellidosKeyTyped
 
-    private void cbEspecialidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbEspecialidadKeyTyped
-        char c = evt.getKeyChar();
-        if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
-            evt.consume();
-            JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_cbEspecialidadKeyTyped
-
     private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
         char c = evt.getKeyChar();
         if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE /*&& c != '.'*/) {
@@ -1081,23 +1830,23 @@ public class admin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtCorreoFocusLost
 
-    private void jTextField8KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField8KeyTyped
+    private void Jtexfieldnombre_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Jtexfieldnombre_recepKeyTyped
         char c = evt.getKeyChar();
 
         if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
             evt.consume();
             JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jTextField8KeyTyped
+    }//GEN-LAST:event_Jtexfieldnombre_recepKeyTyped
 
-    private void jTextField9KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField9KeyTyped
+    private void jtextfieldApellido_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtextfieldApellido_recepKeyTyped
         char c = evt.getKeyChar();
 
         if (!Character.isLetter(c) && c != ' ' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
             evt.consume();
             JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Error", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jTextField9KeyTyped
+    }//GEN-LAST:event_jtextfieldApellido_recepKeyTyped
 
     private void Jtextfield_correo_recepFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_Jtextfield_correo_recepFocusLost
         String correo = Jtextfield_correo_recep.getText().trim();
@@ -1108,21 +1857,36 @@ public class admin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_Jtextfield_correo_recepFocusLost
 
-    private void jTextField11KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField11KeyTyped
+    private void jtextfielID_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtextfielID_recepKeyTyped
         char c = evt.getKeyChar();
         if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE /*&& c != '.'*/) {
             evt.consume();
             JOptionPane.showMessageDialog(null, "Solo se permiten números", "Error", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jTextField11KeyTyped
+    }//GEN-LAST:event_jtextfielID_recepKeyTyped
 
-    private void jTextField12KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField12KeyTyped
+    private void jtextfieldTelefono_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtextfieldTelefono_recepKeyTyped
         char c = evt.getKeyChar();
         if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE /*&& c != '.'*/) {
             evt.consume();
             JOptionPane.showMessageDialog(null, "Solo se permiten números", "Error", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jTextField12KeyTyped
+    }//GEN-LAST:event_jtextfieldTelefono_recepKeyTyped
+
+
+    private void Btn_salirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Btn_salirMouseClicked
+        int respuesta = JOptionPane.showConfirmDialog(
+        this, 
+        "¿Está seguro que desea cerrar la aplicación?",
+        "Confirmar cierre",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.QUESTION_MESSAGE);
+    
+    if (respuesta == JOptionPane.YES_OPTION) {
+        System.exit(0);
+        
+    }
+    }//GEN-LAST:event_Btn_salirMouseClicked
 
     private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
         guardarMedicoDesdeFormulario();
@@ -1133,9 +1897,79 @@ public class admin extends javax.swing.JFrame {
         cargarDatosEnTabla();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+
     private void txtFechaNacimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaNacimientoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFechaNacimientoActionPerformed
+
+    private void jPanel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel9MouseClicked
+         eliminarDoctorSeleccionado();
+    }//GEN-LAST:event_jPanel9MouseClicked
+
+    private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
+        if (TablaDoctores.getSelectedRow() == -1) {
+            cargarDoctorEnFormulario();
+        } else {
+            actualizarDoctor();
+            limpiarFormulario();
+        }
+    
+    }//GEN-LAST:event_jPanel6MouseClicked
+
+    private void JtexfieldCodigo_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtexfieldCodigo_recepKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_JtexfieldCodigo_recepKeyTyped
+
+    private void Jtexfieldfechacontratacion_recep_KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Jtexfieldfechacontratacion_recep_KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Jtexfieldfechacontratacion_recep_KeyTyped
+
+    private void Jtexfieldfechanacimiento_recepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Jtexfieldfechanacimiento_recepKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Jtexfieldfechanacimiento_recepKeyTyped
+
+    private void jPanel16MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel16MouseClicked
+        guardarRecepcionistaDesdeFormulario();
+        cargarDatosEnTablaRecepcionista();
+    }//GEN-LAST:event_jPanel16MouseClicked
+
+    private void TabladeRecepcionistasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabladeRecepcionistasMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TabladeRecepcionistasMouseClicked
+
+    private void jPanel20MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel20MouseClicked
+        if (TabladeRecepcionistas.getSelectedRow() == -1) {
+            cargarRecepcionistaEnTabla();
+        } else {
+            ActuatlizarRecepcionista();
+            LimpiarRecepcionista();
+        }
+    
+    }//GEN-LAST:event_jPanel20MouseClicked
+
+    private void jPanel14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel14MouseClicked
+        eliminarRecepcionistaSeleccionado();
+    }//GEN-LAST:event_jPanel14MouseClicked
+
+    private void jPanel25MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel25MouseClicked
+        guardarSalas();
+        cargarDatosenTablaSalas();
+    }//GEN-LAST:event_jPanel25MouseClicked
+
+    private void jPanel26MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel26MouseClicked
+
+        if (TablaDeSalas.getSelectedRow() == -1) {
+            cargarSalaenTabla();
+        } else {
+            actualizarSalas();
+            LimpiarFormularioSalas();
+        }
+    }//GEN-LAST:event_jPanel26MouseClicked
+
+    private void jPanel27MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel27MouseClicked
+        eliminarSalaSeleccionada();
+    }//GEN-LAST:event_jPanel27MouseClicked
+
 
     /**
      * @param args the command line arguments
@@ -1175,15 +2009,26 @@ public class admin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Btn_salir;
+    private javax.swing.JComboBox<String> Combo_TipoSala;
+    private javax.swing.JComboBox<String> JComboTurno;
+    private javax.swing.JComboBox<String> JcomboSexo;
+    private javax.swing.JComboBox<String> JcomboSexo1;
+    private javax.swing.JSpinner Jspinner_CapacidadSala;
+    private javax.swing.JTextField JtexfieldCodigo_recep;
+    private javax.swing.JTextField Jtexfieldfechacontratacion_recep_;
+    private javax.swing.JTextField Jtexfieldfechanacimiento_recep;
+    private javax.swing.JTextField Jtexfieldnombre_recep;
     private javax.swing.JTextField Jtextfield_correo_recep;
     private javax.swing.JPanel Panel_doctor;
     private javax.swing.JPanel Panel_inicio;
     private javax.swing.JPanel Panel_recepcionistas;
     private javax.swing.JPanel Panel_salas;
     private javax.swing.JTabbedPane Paneles_jtablepane;
-    private javax.swing.JComboBox<String> Tipos_salas_Combobox;
+    private javax.swing.JTable TablaDeSalas;
+    private javax.swing.JTable TablaDoctores;
+    private javax.swing.JTable TabladeRecepcionistas;
     private javax.swing.JComboBox<String> cbEpss;
-    private javax.swing.JTextField cbEspecialidad;
+    private javax.swing.JComboBox<String> cbEspecialidad;
     private javax.swing.JLabel cbSexo;
     private javax.swing.JComboBox<String> cbSexo2;
     private javax.swing.JButton jButton1;
@@ -1224,6 +2069,12 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel43;
+    private javax.swing.JLabel jLabel44;
+    private javax.swing.JLabel jLabel45;
+    private javax.swing.JLabel jLabel46;
+    private javax.swing.JLabel jLabel47;
+    private javax.swing.JLabel jLabel48;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1260,11 +2111,13 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
     private javax.swing.JSeparator jSeparator12;
     private javax.swing.JSeparator jSeparator13;
+    private javax.swing.JSeparator jSeparator14;
+    private javax.swing.JSeparator jSeparator15;
+    private javax.swing.JSeparator jSeparator16;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
@@ -1273,23 +2126,18 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTable jTable4;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
     private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JTextField jtextfielID_recep;
+    private javax.swing.JTextField jtextfieldApellido_recep;
+    private javax.swing.JTextField jtextfieldTelefono_recep;
     private javax.swing.JTextField txtApellidos;
     private javax.swing.JTextField txtCedula;
+    private javax.swing.JTextField txtCodigoSala;
     private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtFechaNacimiento;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtNombreSala;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }

@@ -23,18 +23,246 @@ import model.Persona;
  *
  * @author Maria liz
  */
-public class recepcionista extends javax.swing.JFrame {
 
-     private DefaultTableModel tableModel;
-    private PacienteDAO pacienteDAO= new PacienteDAO();
-    public recepcionista() {
+/**
+ *
+ * @author Maria liz
+ */public class recepcionista extends javax.swing.JFrame {
+    private DefaultTableModel tableModelPaciente;
+    private PacienteDAO pacienteDAO = new PacienteDAO();
+    private String documentoOriginal;
+
+     public recepcionista() {
+
         initComponents();
-       
-
+        initTablePaciente();
+      setUpTablePaciente();
+         cargarDatosEnTablaPaciente();
+        
+     
     }
 
-
+    private void setUpTablePaciente(){
+        tableModelPaciente=(DefaultTableModel)tablaPacientes.getModel();
+    }
+    private void guardarPacienteDesdeFormulario(){
+        try{
+            String nombres=txtNombre.getText().trim();
+            String apellidos=txtApellidos.getText().trim();
+            String documento=txtDocumentoR.getText().trim();
+            String email=txtEmail.getText().trim();
+            String fechaStr=txtFechaNacimiento.getText().trim();
+            String telefono=txtTelefono.getText().trim();
+            String sexo=cbSexo.getSelectedItem().toString();
+            String eps=cbEps.getSelectedItem().toString();
+            String tipoDocumento=cbTipoDocumento.getSelectedItem().toString();
+            String tipoSangre=cboTipoSangre.getSelectedItem().toString();
+            
+            if(nombres.isEmpty()||apellidos.isEmpty()||documento.isEmpty()|email.isEmpty()||telefono.isEmpty()){
+                JOptionPane.showMessageDialog(this,"Todos los campos son obligatorios","Error",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+             if (pacienteDAO.existeDocumento(documento)) {
+            JOptionPane.showMessageDialog(this, 
+                "El número de documento ya está registrado", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         
+             LocalDate fechaNacimiento;
+            try {
+                fechaNacimiento = LocalDate.parse(fechaStr);
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Formato de fecha inválido. Usa YYYY-MM-DD",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            Paciente nuevoPaciente=new Paciente(
+            
+            documento, 
+            nombres, 
+            apellidos, 
+            fechaNacimiento, 
+            sexo, 
+            eps,
+            email, 
+            telefono,
+            tipoDocumento,
+            tipoSangre
+            );
+            pacienteDAO.guardarPaciente(nuevoPaciente);
+            JOptionPane.showMessageDialog(this, "paciente guardado exitosamente:\n"+JOptionPane.ERROR_MESSAGE);
+            limpiarPaciente();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Error al guardar Paciente"+e.getMessage()
+                    ,"ERORR",JOptionPane.ERROR_MESSAGE);
+    }    
+ }
+    private void limpiarPaciente(){
+     txtNombre.setText("");
+     txtApellidos.setText("");
+     txtEmail.setText("");
+     txtDocumentoR.setText("");
+     cbTipoDocumento.setSelectedItem(0);
+     cboTipoSangre.setSelectedItem(0);
+     cbSexo.setSelectedItem(0);
+    cbEps.setSelectedItem(0);
+    txtCelular.setText("");
+     
+ }
+    private void initTablePaciente(){
+        tableModelPaciente=new DefaultTableModel(
+       new Object[]{"Documento","Nombres","Apellidos","Fecha Nacimiento","Sexo","Eps","Email","Telefono","Tipo Documento","Tipo Sangre"
+       },0){
+           @Override
+           public boolean isCellEditable(int row,int column){
+               return false;
+           }
+       };
+        tablaPacientes.setModel(tableModelPaciente);
+    }
+    private void cargarDatosEnTablaPaciente(){
+        tableModelPaciente.setRowCount(0);
+        List<Paciente>pacientes=pacienteDAO.cargarTodos();
+           for (Paciente paciente : pacientes) {
+            Object[] row = {
+                paciente.getNumeroDocumento(), 
+                paciente.getNombres(),         
+                paciente.getApellidos(),      
+                paciente.getFechaNacimiento(),
+                paciente.getSexo(),           
+                paciente.getEps(),            
+                paciente.getEmail(),           
+                paciente.getCelular(),        
+                paciente.getTipoDocumento(),   
+                paciente.getTipoSangre()  
+            };
+            tableModelPaciente.addRow(row);
+        }
+    
+    }
+    
+    private void eliminarPacienteSeleccionado() {
+    int filaSeleccionada = tablaPacientes.getSelectedRow();
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, 
+            "Seleccione un paciente de la tabla.", 
+            "Error", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String numeroDocumento = tableModelPaciente.getValueAt(filaSeleccionada, 0).toString();
+
+    int confirmacion = JOptionPane.showConfirmDialog(
+        this, 
+        "¿Eliminar al paciente con documento " + numeroDocumento + "?",
+        "Confirmar",
+        JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        boolean eliminado = pacienteDAO.eliminarPaciente(numeroDocumento);
+        if (eliminado) {
+            JOptionPane.showMessageDialog(this, 
+                "Paciente eliminado correctamente", 
+                "Éxito", 
+                JOptionPane.INFORMATION_MESSAGE);
+            cargarDatosEnTablaPaciente();
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "No se pudo eliminar al paciente", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
+   private void actualizarPaciente() {
+    try {
+        int filaSeleccionada = tablaPacientes.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, 
+                "Seleccione un paciente de la tabla para actualizar", 
+                "Error", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String documentoOriginal = tableModelPaciente.getValueAt(filaSeleccionada, 0).toString();
+
+        String nombres = txtNombre.getText().trim();
+        String apellidos = txtApellidos.getText().trim();
+        String documento = txtDocumentoR.getText().trim();
+        String email = txtEmail.getText().trim();
+        String fechaStr = txtFechaNacimiento.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String sexo = cbSexo.getSelectedItem().toString();
+        String eps = cbEps.getSelectedItem().toString();
+        String tipoDocumento = cbTipoDocumento.getSelectedItem().toString();
+        String tipoSangre = cboTipoSangre.getSelectedItem().toString();
+
+        if(nombres.isEmpty() || apellidos.isEmpty() || documento.isEmpty() || 
+           email.isEmpty() || telefono.isEmpty() || fechaStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Todos los campos son obligatorios",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        LocalDate fechaNacimiento;
+        try {
+            fechaNacimiento = LocalDate.parse(fechaStr);
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this,
+                "Formato de fecha inválido. Usa YYYY-MM-DD",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!documentoOriginal.equals(documento)) {
+            boolean existe = pacienteDAO.cargarTodos().stream()
+                .anyMatch(p -> p.getNumeroDocumento().equals(documento));
+            if (existe) {
+                JOptionPane.showMessageDialog(this,
+                    "Ya existe un paciente con este documento",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        Paciente pacienteActualizado = new Paciente(
+            documento, nombres, apellidos, fechaNacimiento, 
+            sexo, eps, email, telefono, tipoDocumento, tipoSangre
+        );
+
+        boolean actualizado = pacienteDAO.actualizarPaciente(documentoOriginal, pacienteActualizado);
+        if (actualizado) {
+            JOptionPane.showMessageDialog(this,
+                "Paciente actualizado exitosamente",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE);
+            cargarDatosEnTablaPaciente();
+            limpiarPaciente();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                "No se pudo actualizar el paciente. Verifique los datos.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+            "Error al actualizar paciente: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -188,6 +416,44 @@ public class recepcionista extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jPanel12 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+<<<<<<< Updated upstream
+=======
+        jPanel13 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        txtDocumentoR = new javax.swing.JTextField();
+        jSeparator10 = new javax.swing.JSeparator();
+        jLabel34 = new javax.swing.JLabel();
+        cbEps = new javax.swing.JComboBox<>();
+        jSeparator24 = new javax.swing.JSeparator();
+        jLabel66 = new javax.swing.JLabel();
+        cbSexo = new javax.swing.JComboBox<>();
+        jSeparator27 = new javax.swing.JSeparator();
+        jLabel11 = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        jSeparator8 = new javax.swing.JSeparator();
+        jLabel28 = new javax.swing.JLabel();
+        txtApellidos = new javax.swing.JTextField();
+        jSeparator23 = new javax.swing.JSeparator();
+        txtTelefono = new javax.swing.JLabel();
+        txtCelular = new javax.swing.JTextField();
+        jSeparator29 = new javax.swing.JSeparator();
+        jLabel67 = new javax.swing.JLabel();
+        jSeparator22 = new javax.swing.JSeparator();
+        txtEmail = new javax.swing.JTextField();
+        jLabel65 = new javax.swing.JLabel();
+        txtFechaNacimiento = new javax.swing.JTextField();
+        jSeparator28 = new javax.swing.JSeparator();
+        jLabel4 = new javax.swing.JLabel();
+        cboTipoSangre = new javax.swing.JComboBox<>();
+        cbTipoDocumento = new javax.swing.JComboBox<>();
+        jSeparator7 = new javax.swing.JSeparator();
+        btnGuardar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablaPacientes = new javax.swing.JTable();
+>>>>>>> Stashed changes
         jLabel79 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1210,6 +1476,43 @@ public class recepcionista extends javax.swing.JFrame {
         panelGuardarPaciente.setForeground(new java.awt.Color(255, 255, 255));
         panelGuardarPaciente.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+<<<<<<< Updated upstream
+=======
+        jPanel12.setBackground(new java.awt.Color(28, 43, 110));
+
+        jLabel3.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("INFORMACION DEL PACIENTE ");
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGap(263, 263, 263)
+                .addComponent(jLabel3)
+                .addContainerGap(347, Short.MAX_VALUE))
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(11, Short.MAX_VALUE))
+        );
+
+        panelGuardarPaciente.add(jPanel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 960, 40));
+
+        jPanel13.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jPanel13.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel8.setText("Documento*");
+        jPanel13.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+
+>>>>>>> Stashed changes
         txtDocumentoR.setBackground(new java.awt.Color(0, 0, 0, 0));
         txtDocumentoR.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtDocumentoR.setBorder(null);
@@ -1228,6 +1531,7 @@ public class recepcionista extends javax.swing.JFrame {
                 txtDocumentoRKeyTyped(evt);
             }
         });
+<<<<<<< Updated upstream
         panelGuardarPaciente.add(txtDocumentoR, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 120, 220, 30));
 
         jSeparator7.setBackground(new java.awt.Color(0, 0, 0));
@@ -1308,9 +1612,32 @@ public class recepcionista extends javax.swing.JFrame {
         jLabel65.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel65.setText("Nacimiento*");
         panelGuardarPaciente.add(jLabel65, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 460, 130, -1));
+=======
+        jPanel13.add(txtDocumentoR, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, 141, 30));
+
+        jSeparator10.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator10.setForeground(new java.awt.Color(10, 92, 184));
+        jPanel13.add(jSeparator10, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 40, 141, 10));
+
+        jLabel34.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel34.setText("Eps*");
+        jPanel13.add(jLabel34, new org.netbeans.lib.awtextra.AbsoluteConstraints(7, 74, 50, -1));
+
+        cbEps.setBackground(new java.awt.Color(0, 0, 0, 0));
+        cbEps.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Seleccione>", "Coosalud", "Sanistas", "Comfamiliar", "Nueva Eps" }));
+        jPanel13.add(cbEps, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 70, 120, 25));
+
+        jSeparator24.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator24.setForeground(new java.awt.Color(10, 92, 184));
+        jPanel13.add(jSeparator24, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 100, 120, 10));
+
+        jLabel66.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel66.setText("Sexo*");
+        jPanel13.add(jLabel66, new org.netbeans.lib.awtextra.AbsoluteConstraints(181, 75, -1, -1));
+>>>>>>> Stashed changes
 
         cbSexo.setBackground(new java.awt.Color(0, 0, 0, 0));
-        cbSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M", "F" }));
+        cbSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Seleccione>", "M", "F" }));
         cbSexo.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbSexoFocusLost(evt);
@@ -1321,6 +1648,7 @@ public class recepcionista extends javax.swing.JFrame {
                 cbSexoActionPerformed(evt);
             }
         });
+<<<<<<< Updated upstream
         panelGuardarPaciente.add(cbSexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 270, 105, 25));
 
         jLabel66.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -1343,6 +1671,95 @@ public class recepcionista extends javax.swing.JFrame {
         txtEmailR.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtEmailR.setBorder(null);
         txtEmailR.addFocusListener(new java.awt.event.FocusAdapter() {
+=======
+        jPanel13.add(cbSexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, 120, 25));
+
+        jSeparator27.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator27.setForeground(new java.awt.Color(10, 92, 184));
+        jPanel13.add(jSeparator27, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 100, 120, 10));
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel11.setText(" Nombre*");
+        jPanel13.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 90, 30));
+
+        txtNombre.setBackground(new java.awt.Color(0, 0, 0, 0));
+        txtNombre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtNombre.setBorder(null);
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
+            }
+        });
+        jPanel13.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, 180, 30));
+
+        jSeparator8.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator8.setForeground(new java.awt.Color(10, 92, 184));
+        jPanel13.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 150, 215, 10));
+
+        jLabel28.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel28.setText("Apellido*");
+        jPanel13.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 80, 30));
+
+        txtApellidos.setBackground(new java.awt.Color(0, 0, 0, 0));
+        txtApellidos.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtApellidos.setBorder(null);
+        txtApellidos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtApellidosActionPerformed(evt);
+            }
+        });
+        txtApellidos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApellidosKeyTyped(evt);
+            }
+        });
+        jPanel13.add(txtApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 160, 190, 30));
+
+        jSeparator23.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator23.setForeground(new java.awt.Color(10, 92, 184));
+        jPanel13.add(jSeparator23, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, 215, 10));
+
+        txtTelefono.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtTelefono.setText("Celular*");
+        jPanel13.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 80, -1));
+
+        txtCelular.setBackground(new java.awt.Color(0, 0, 0, 0));
+        txtCelular.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtCelular.setBorder(null);
+        txtCelular.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCelularFocusLost(evt);
+            }
+        });
+        txtCelular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCelularActionPerformed(evt);
+            }
+        });
+        txtCelular.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCelularKeyTyped(evt);
+            }
+        });
+        jPanel13.add(txtCelular, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 210, 215, 30));
+
+        jSeparator29.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator29.setForeground(new java.awt.Color(10, 92, 184));
+        jPanel13.add(jSeparator29, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, 215, 10));
+
+        jLabel67.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel67.setText("Email*");
+        jPanel13.add(jLabel67, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 70, -1));
+
+        jSeparator22.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator22.setForeground(new java.awt.Color(10, 92, 184));
+        jPanel13.add(jSeparator22, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 280, 215, 20));
+
+        txtEmail.setBackground(new java.awt.Color(0, 0, 0, 0));
+        txtEmail.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtEmail.setBorder(null);
+        txtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+>>>>>>> Stashed changes
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtEmailRFocusLost(evt);
             }
@@ -1354,6 +1771,7 @@ public class recepcionista extends javax.swing.JFrame {
         });
         txtEmailR.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
+<<<<<<< Updated upstream
                 txtEmailRKeyTyped(evt);
             }
         });
@@ -1367,6 +1785,53 @@ public class recepcionista extends javax.swing.JFrame {
         txtCelularR.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtCelularR.setBorder(null);
         txtCelularR.addFocusListener(new java.awt.event.FocusAdapter() {
+=======
+                txtEmailKeyTyped(evt);
+            }
+        });
+        jPanel13.add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 250, 215, -1));
+
+        jLabel65.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel65.setText("Fecha Nacimiento*");
+        jPanel13.add(jLabel65, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, -1, -1));
+
+        txtFechaNacimiento.setBorder(null);
+        txtFechaNacimiento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFechaNacimientoActionPerformed(evt);
+            }
+        });
+        jPanel13.add(txtFechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 300, 160, 25));
+
+        jSeparator28.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator28.setForeground(new java.awt.Color(10, 92, 184));
+        jPanel13.add(jSeparator28, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 330, 170, 10));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel4.setText("Tipo De Sangre*");
+        jPanel13.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 160, -1));
+
+        cboTipoSangre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Seleccione>", "A+", "A-", "B+", "B-", "O+", "A-", "AB+", "AB-" }));
+        jPanel13.add(cboTipoSangre, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 350, 120, -1));
+
+        cbTipoDocumento.setBackground(new java.awt.Color(0, 0, 0, 0));
+        cbTipoDocumento.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
+        cbTipoDocumento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RC", "TI", "CC" }));
+        cbTipoDocumento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTipoDocumentoActionPerformed(evt);
+            }
+        });
+        jPanel13.add(cbTipoDocumento, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 10, 60, 30));
+
+        jSeparator7.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator7.setForeground(new java.awt.Color(10, 92, 184));
+        jPanel13.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 40, 60, 20));
+
+        btnGuardar.setBackground(new java.awt.Color(10, 92, 184));
+        btnGuardar.setText("Guardar");
+        btnGuardar.addFocusListener(new java.awt.event.FocusAdapter() {
+>>>>>>> Stashed changes
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtCelularRFocusLost(evt);
             }
@@ -1381,7 +1846,11 @@ public class recepcionista extends javax.swing.JFrame {
                 txtCelularRKeyTyped(evt);
             }
         });
+<<<<<<< Updated upstream
         panelGuardarPaciente.add(txtCelularR, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 310, 215, 25));
+=======
+        jPanel13.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 430, 90, 20));
+>>>>>>> Stashed changes
 
         txtTelefono.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtTelefono.setText("Celular*");
@@ -1402,6 +1871,7 @@ public class recepcionista extends javax.swing.JFrame {
                 jButton1FocusLost(evt);
             }
         });
+<<<<<<< Updated upstream
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -1439,6 +1909,39 @@ public class recepcionista extends javax.swing.JFrame {
         );
 
         panelGuardarPaciente.add(jPanel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 750, 50));
+=======
+        jPanel13.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 430, 85, -1));
+
+        jButton2.setText("Modificar");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+        jPanel13.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 430, 87, -1));
+
+        jSeparator1.setBackground(new java.awt.Color(51, 51, 255));
+        jSeparator1.setForeground(new java.awt.Color(10, 92, 184));
+        jPanel13.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 380, 130, 10));
+
+        panelGuardarPaciente.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 370, 480));
+
+        tablaPacientes.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        tablaPacientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane3.setViewportView(tablaPacientes);
+
+        panelGuardarPaciente.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 62, 600, 470));
+>>>>>>> Stashed changes
 
         jTabbedPane1.addTab("Pacientes", panelGuardarPaciente);
 
@@ -1452,7 +1955,7 @@ public class recepcionista extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1571,12 +2074,15 @@ public class recepcionista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbModificarPacienteCitaActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         if(txtDocumentoR.getText().trim().isEmpty() ||
             txtPriNombreR.getText().trim().isEmpty() ||
             txtPriApellidoR.getText().trim().isEmpty() ||
             txtEmailR.getText().trim().isEmpty() ||
             txtCelularR.getText().trim().isEmpty()) {
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    //  guardarPacienteDesdeFormulario();
+        //cargarDatosEnTablaPaciente();  
 
             JOptionPane.showMessageDialog(this, "Rellene todos los campos obligatorios");
             return;
@@ -1586,7 +2092,7 @@ public class recepcionista extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Solo se permiten letras en el Nombre", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }                                        
 
     private void txtPriApellidoRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPriApellidoRActionPerformed
 
@@ -1665,6 +2171,26 @@ char c=evt.getKeyChar();
         }
     }//GEN-LAST:event_txtCelularRFocusLost
 
+    private void txtCelularKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCelularKeyTyped
+      char c = evt.getKeyChar();
+    
+    if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+        evt.consume();
+        JOptionPane.showMessageDialog(null, "Solo se permiten números", "Error", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+        String texto = ((JTextField)evt.getSource()).getText();
+    
+    if (texto.length() >= 10 && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+        evt.consume();
+        JOptionPane.showMessageDialog(null, "Máximo 10 números permitidos", "Error", JOptionPane.WARNING_MESSAGE);
+                }
+    }//GEN-LAST:event_txtCelularKeyTyped
+
+    private void txtCelularFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCelularFocusLost
+    
+    }//GEN-LAST:event_txtCelularFocusLost
+
     private void txtCelularRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCelularRActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCelularRActionPerformed
@@ -1704,6 +2230,27 @@ char c=evt.getKeyChar();
     private void jButton1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyTyped
        
     }//GEN-LAST:event_jButton1KeyTyped
+    }                                   
+
+    private void btnGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseClicked
+        guardarPacienteDesdeFormulario();
+        cargarDatosEnTablaPaciente();
+
+          // TODO add your handling code here:
+    }//GEN-LAST:event_btnGuardarMouseClicked
+
+    private void txtFechaNacimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaNacimientoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFechaNacimientoActionPerformed
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+actualizarPaciente();              // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+eliminarPacienteSeleccionado();    // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1MouseClicked
+>>>>>>> Stashed changes
 
     /**
      * @param args the command line arguments
@@ -1835,6 +2382,7 @@ char c=evt.getKeyChar();
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
     private javax.swing.JSeparator jSeparator12;

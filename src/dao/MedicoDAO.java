@@ -17,7 +17,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 
 public class MedicoDAO {
-    private static final String ARCHIVO_JSON = "C:\\Users\\Maria liz\\Desktop\\farmaSalud\\src\\resources\\data\\empleados.json";
+    private static final String ARCHIVO_JSON = "C:\\Users\\usuario\\Downloads\\farmaSalud\\src\\resources\\data\\empleados.json";
     private Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
         .create();
 
@@ -49,14 +49,53 @@ public class MedicoDAO {
         }
     }
     
-    public boolean eliminarMedico(String numeroDocumento) {
+   public boolean eliminarMedico(String numeroDocumento) {
+    try {
+        if (numeroDocumento == null || numeroDocumento.trim().isEmpty()) {
+            throw new IllegalArgumentException("Número de documento no puede ser nulo o vacío");
+        }
+
         List<Medico> medicos = cargarTodos();
-        boolean removed = medicos.removeIf(m -> m.getNumeroDocumento().equals(numeroDocumento));
+
+        boolean removed = medicos.removeIf(m -> 
+            numeroDocumento.equals(m.getNumeroDocumento())
+        );
+        
         if (removed) {
             guardarTodos(medicos);
+            System.out.println("Médico con documento " + numeroDocumento + " eliminado.");
         }
+        
         return removed;
+        
+    }catch (Exception e) {
+        // Cualquier otro error inesperado
+        System.err.println("Error inesperado: " + e.getMessage());
+        return false;
     }
+        
+        
+}
+   
+   public boolean actualizarMedico(String cedulaOriginal, Medico medicoActualizado) {
+    try {
+        List<Medico> medicos = cargarTodos();
+        
+        // Buscar el médico a actualizar
+        for (int i = 0; i < medicos.size(); i++) {
+            if (medicos.get(i).getNumeroDocumento().equals(cedulaOriginal)) {
+                // Reemplazar con los nuevos datos
+                medicos.set(i, medicoActualizado);
+                guardarTodos(medicos);
+                return true;
+            }
+        }
+        return false;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 
 public class LocalDateAdapter extends TypeAdapter<LocalDate>{
         private final DateTimeFormatter formatter=DateTimeFormatter.ISO_LOCAL_DATE;

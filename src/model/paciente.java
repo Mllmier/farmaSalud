@@ -11,7 +11,8 @@ public class Paciente extends Persona {
     private List<Cita> citas;
     private List<HistoriaMedica> historialMedico;
 
-    public Paciente(String tipoSangre, String alergias, List<Cita> citas, List<HistoriaMedica> historialMedico, String numeroDocumento, String nombres, String apellidos, LocalDate fechaNacimiento, String sexo, String eps, String email, String celular) {
+   
+    public Paciente(String numeroDocumento, String nombres, String apellidos, LocalDate fechaNacimiento, String sexo, String eps, String email, String celular,String tipoDocumento,String tipoSangre) {
         super(numeroDocumento, nombres, apellidos, fechaNacimiento, sexo, eps, email, celular);
         this.tipoSangre = tipoSangre;
         this.alergias = alergias;
